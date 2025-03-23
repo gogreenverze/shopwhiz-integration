@@ -1,14 +1,13 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Supported languages
-type Language = "en" | "es" | "fr" | "de" | "zh" | "ja" | "ar";
+type Language = "en" | "es" | "fr" | "de" | "zh" | "ja" | "ar" | "hi" | "bn" | "te" | "ta" | "mr" | "gu" | "kn" | "ml" | "pa" | "ur" | "ru" | "pt" | "id" | "ko" | "tr" | "vi" | "ms" | "th" | "pl" | "nl" | "it";
 
 // Language context type
 type LanguageContextType = {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, variables?: Record<string, string>) => string;
 };
 
 // Create context with default values
@@ -33,6 +32,108 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.sales": "Sales",
     "nav.invoices": "Invoices",
     "nav.settings": "Settings",
+    
+    // Products page
+    "products.title": "Products",
+    "products.description": "Manage your inventory, edit products, and track stock levels.",
+    "products.searchPlaceholder": "Search products...",
+    "products.categories.all": "All",
+    "products.actions.add": "Add Product",
+    "products.actions.edit": "Edit",
+    "products.actions.delete": "Delete",
+    "products.actions.save": "Save",
+    "products.actions.cancel": "Cancel",
+    "products.actions.apply": "Apply Filters",
+    "products.actions.reset": "Reset",
+    "products.noResults": "No products found",
+    "products.adjustSearch": "Try adjusting your search or category filter",
+    "products.table.name": "Name",
+    "products.table.price": "Price",
+    "products.table.stock": "Stock",
+    "products.table.category": "Category",
+    "products.table.created": "Created",
+    "products.dialog.addTitle": "Add New Product",
+    "products.dialog.addDescription": "Add product details below to create a new inventory item.",
+    "products.dialog.editTitle": "Edit Product",
+    "products.dialog.editDescription": "Update product details below.",
+    "products.dialog.filterTitle": "Filter Products",
+    "products.dialog.filterDescription": "Apply filters to narrow down product list.",
+    "products.form.name": "Name",
+    "products.form.price": "Price",
+    "products.form.stock": "Stock",
+    "products.form.category": "Category",
+    "products.form.description": "Description",
+    "products.filter.price": "Price Range",
+    "products.filter.stock": "Stock Level",
+    "products.filter.category": "Category",
+    "products.filter.min": "Min",
+    "products.filter.max": "Max",
+    "products.validation.required": "Please fill all required fields",
+    "products.success.added": "Product '{name}' added successfully",
+    "products.success.updated": "Product updated successfully",
+    "products.success.deleted": "Product deleted successfully",
+    "products.info.editing": "Editing product {id}",
+    "products.info.filtersApplied": "Filters applied successfully",
+    
+    // Sales page
+    "sales.title": "Sales",
+    "sales.description": "View and manage all sales transactions.",
+    "sales.searchPlaceholder": "Search sales...",
+    "sales.completed": "Completed Sales",
+    "sales.pending": "Pending Sales",
+    "sales.cancelled": "Cancelled Sales",
+    "sales.guest": "Guest Customer",
+    "sales.actions.new": "New Sale",
+    "sales.actions.save": "Save Sale",
+    "sales.actions.cancel": "Cancel",
+    "sales.actions.apply": "Apply Filters",
+    "sales.actions.reset": "Reset",
+    "sales.actions.print": "Print Receipt",
+    "sales.actions.download": "Download Receipt",
+    "sales.actions.addItem": "Add Item",
+    "sales.status.all": "All",
+    "sales.status.completed": "Completed",
+    "sales.status.pending": "Pending",
+    "sales.status.cancelled": "Cancelled",
+    "sales.table.id": "Sale ID",
+    "sales.table.customer": "Customer",
+    "sales.table.amount": "Amount",
+    "sales.table.date": "Date",
+    "sales.table.status": "Status",
+    "sales.table.payment": "Payment",
+    "sales.table.items": "items",
+    "sales.dialog.newTitle": "Create New Sale",
+    "sales.dialog.newDescription": "Add products and customer details for this transaction.",
+    "sales.dialog.filterTitle": "Filter Sales",
+    "sales.dialog.filterDescription": "Apply filters to narrow down sales list.",
+    "sales.form.customer": "Customer",
+    "sales.form.selectCustomer": "Select customer",
+    "sales.form.items": "Items",
+    "sales.form.selectProduct": "Select product",
+    "sales.form.payment": "Payment Method",
+    "sales.form.notes": "Notes",
+    "sales.form.total": "Total",
+    "sales.payment.cash": "Cash",
+    "sales.payment.card": "Card",
+    "sales.payment.upi": "UPI",
+    "sales.payment.bank": "Bank Transfer",
+    "sales.filter.status": "Status",
+    "sales.filter.dateRange": "Date Range",
+    "sales.filter.payment": "Payment Method",
+    "sales.filter.allPayments": "All Payment Methods",
+    "sales.detail.title": "Sale {id}",
+    "sales.detail.customer": "Customer",
+    "sales.detail.subtotal": "Subtotal",
+    "sales.detail.tax": "Tax",
+    "sales.detail.discount": "Discount",
+    "sales.detail.total": "Total",
+    "sales.detail.paymentMethod": "Payment Method",
+    "sales.detail.paid": "Paid",
+    "sales.validation.products": "Please select products for the sale",
+    "sales.success.created": "Sale created successfully",
+    "sales.info.downloaded": "Receipt for sale {id} downloaded",
+    "sales.info.printed": "Receipt for sale {id} sent to printer",
+    "sales.info.filtersApplied": "Filters applied successfully",
     
     // Settings
     "settings.title": "Settings",
@@ -143,7 +244,67 @@ const translations: Record<Language, Record<string, string>> = {
     "settings.store.address": "Dirección de la Tienda",
     "settings.store.saveChanges": "Guardar Cambios",
     
-    // ... more Spanish translations (abbreviated for brevity)
+    "settings.receipt.title": "Personalización de Recibos",
+    "settings.receipt.description": "Personaliza la apariencia y el contenido de los recibos de los clientes.",
+    "settings.receipt.header": "Encabezado del Recibo",
+    "settings.receipt.footer": "Pie de Página del Recibo",
+    "settings.receipt.showLogo": "Mostrar Logotipo de la Tienda",
+    "settings.receipt.showContact": "Mostrar Información de Contacto",
+    "settings.receipt.includeBarcode": "Incluir Código de Barras",
+    
+    "settings.notifications.title": "Preferencias de Notificación",
+    "settings.notifications.description": "Personaliza cuándo y cómo recibes notificaciones.",
+    "settings.notifications.emailReceipts": "Recibos por Correo Electrónico",
+    "settings.notifications.emailReceipts.description": "Enviar recibos por correo electrónico a los clientes después de la compra",
+    "settings.notifications.lowStock": "Alertas de Bajo Stock",
+    "settings.notifications.lowStock.description": "Recibir notificaciones cuando el inventario de productos esté bajo",
+    "settings.notifications.dailyReports": "Informes Diarios de Ventas",
+    "settings.notifications.dailyReports.description": "Recibir un resumen diario de las ventas y transacciones",
+    "settings.notifications.customerActivity": "Actividad del Cliente",
+    "settings.notifications.customerActivity.description": "Recibir notificaciones sobre nuevos clientes y registros",
+    "settings.notifications.savePreferences": "Guardar Preferencias",
+    
+    "settings.integrations.title": "Integraciones y Servicios",
+    "settings.integrations.description": "Conecta tu POS con servicios y plataformas externas.",
+    "settings.integrations.whatsapp": "Integración de WhatsApp",
+    "settings.integrations.whatsapp.description": "Conéctate con los clientes a través de WhatsApp para notificaciones y soporte",
+    "settings.integrations.email": "Marketing por Correo Electrónico",
+    "settings.integrations.email.description": "Conéctate con plataformas de marketing por correo electrónico para campañas",
+    "settings.integrations.accounting": "Software de Contabilidad",
+    "settings.integrations.accounting.description": "Sincroniza los datos de ventas con tu sistema de contabilidad",
+    "settings.integrations.ecommerce": "Plataforma de Comercio Electrónico",
+    "settings.integrations.ecommerce.description": "Conecta tu tienda en línea con tu sistema POS",
+    "settings.integrations.saveIntegrations": "Guardar Integraciones",
+    
+    "settings.api.title": "Acceso API",
+    "settings.api.description": "Administra las claves API y el acceso a los datos de tu POS.",
+    "settings.api.key": "Clave API",
+    "settings.api.copy": "Copiar",
+    "settings.api.note": "Esta clave proporciona acceso a la API de tu tienda. Mantenla segura.",
+    "settings.api.regenerate": "Regenerar Clave API",
+    
+    "settings.appearance.title": "Configuración de Tema",
+    "settings.appearance.description": "Personaliza la apariencia de tu interfaz POS.",
+    "settings.appearance.theme": "Tema de Color",
+    "settings.appearance.darkMode": "Modo Oscuro",
+    "settings.appearance.animations": "Habilitar Animaciones",
+    "settings.appearance.compact": "Modo Compacto",
+    "settings.appearance.saveTheme": "Guardar Tema",
+    
+    "settings.localization.title": "Localización",
+    "settings.localization.description": "Establece tu idioma, moneda y formatos de fecha preferidos.",
+    "settings.localization.language": "Idioma",
+    "settings.localization.currency": "Moneda",
+    "settings.localization.dateFormat": "Formato de Fecha",
+    "settings.localization.timeFormat": "Formato de Hora",
+    "settings.localization.saveLocalization": "Guardar Localización",
+    
+    "products.title": "Productos",
+    "products.actions.add": "Añadir Producto",
+    "sales.title": "Ventas",
+    "sales.actions.new": "Nueva Venta",
+    
+    // Success messages
     "settings.success.saved": "Configuración guardada exitosamente",
     "settings.success.copied": "Clave API copiada al portapapeles",
     "settings.success.regenerated": "Clave API regenerada",
@@ -154,7 +315,79 @@ const translations: Record<Language, Record<string, string>> = {
     "app.name": "ShopOS",
     "app.logout": "Déconnexion",
     "nav.dashboard": "Tableau de Bord",
-    // ... more French translations (abbreviated for brevity)
+    "nav.pos": "Point de Vente",
+    "nav.products": "Produits",
+    "nav.customers": "Clients",
+    "nav.sales": "Ventes",
+    "nav.invoices": "Factures",
+    "nav.settings": "Paramètres",
+    "settings.title": "Paramètres",
+    "settings.description": "Gérez les paramètres de votre compte et configurez les préférences de votre boutique.",
+    "settings.tabs.store": "Boutique",
+    "settings.tabs.notifications": "Notifications",
+    "settings.tabs.integrations": "Intégrations",
+    "settings.tabs.appearance": "Apparence",
+    "settings.store.info": "Informations sur la boutique",
+    "settings.store.info.description": "Mettez à jour les détails de votre boutique et les informations commerciales.",
+    "settings.store.name": "Nom de la boutique",
+    "settings.store.email": "Adresse e-mail",
+    "settings.store.phone": "Numéro de téléphone",
+    "settings.store.taxRate": "Taux de taxe (%)",
+    "settings.store.address": "Adresse de la boutique",
+    "settings.store.saveChanges": "Enregistrer les modifications",
+    "settings.receipt.title": "Personnalisation des reçus",
+    "settings.receipt.description": "Personnalisez l'apparence et le contenu des reçus des clients.",
+    "settings.receipt.header": "En-tête du reçu",
+    "settings.receipt.footer": "Pied de page du reçu",
+    "settings.receipt.showLogo": "Afficher le logo de la boutique",
+    "settings.receipt.showContact": "Afficher les informations de contact",
+    "settings.receipt.includeBarcode": "Inclure le code-barres",
+    "settings.notifications.title": "Préférences de notification",
+    "settings.notifications.description": "Personnalisez quand et comment vous recevez les notifications.",
+    "settings.notifications.emailReceipts": "Reçus par e-mail",
+    "settings.notifications.emailReceipts.description": "Envoyez des reçus par e-mail aux clients après l'achat",
+    "settings.notifications.lowStock": "Alertes de stock faible",
+    "settings.notifications.lowStock.description": "Soyez averti lorsque l'inventaire des produits est faible",
+    "settings.notifications.dailyReports": "Rapports de ventes quotidiens",
+    "settings.notifications.dailyReports.description": "Recevez un résumé quotidien des ventes et des transactions",
+    "settings.notifications.customerActivity": "Activité des clients",
+    "settings.notifications.customerActivity.description": "Soyez averti des nouveaux clients et des inscriptions",
+    "settings.notifications.savePreferences": "Enregistrer les préférences",
+    "settings.integrations.title": "Intégrations et services",
+    "settings.integrations.description": "Connectez votre POS à des services et plateformes externes.",
+    "settings.integrations.whatsapp": "Intégration WhatsApp",
+    "settings.integrations.whatsapp.description": "Connectez-vous avec les clients via WhatsApp pour les notifications et l'assistance",
+    "settings.integrations.email": "Marketing par e-mail",
+    "settings.integrations.email.description": "Connectez-vous aux plateformes de marketing par e-mail pour les campagnes",
+    "settings.integrations.accounting": "Logiciel de comptabilité",
+    "settings.integrations.accounting.description": "Synchronisez les données de ventes avec votre système de comptabilité",
+    "settings.integrations.ecommerce": "Plateforme de commerce électronique",
+    "settings.integrations.ecommerce.description": "Connectez votre boutique en ligne à votre système POS",
+    "settings.integrations.saveIntegrations": "Enregistrer les intégrations",
+    "settings.api.title": "Accès API",
+    "settings.api.description": "Gérez les clés API et l'accès aux données de votre POS.",
+    "settings.api.key": "Clé API",
+    "settings.api.copy": "Copier",
+    "settings.api.note": "Cette clé donne accès à l'API de votre boutique. Gardez-la en sécurité.",
+    "settings.api.regenerate": "Régénérer la clé API",
+    "settings.appearance.title": "Paramètres du thème",
+    "settings.appearance.description": "Personnalisez l'apparence de votre interface POS.",
+    "settings.appearance.theme": "Thème de couleur",
+    "settings.appearance.darkMode": "Mode sombre",
+    "settings.appearance.animations": "Activer les animations",
+    "settings.appearance.compact": "Mode compact",
+    "settings.appearance.saveTheme": "Enregistrer le thème",
+    "settings.localization.title": "Localisation",
+    "settings.localization.description": "Définissez votre langue, devise et formats de date préférés.",
+    "settings.localization.language": "Langue",
+    "settings.localization.currency": "Devise",
+    "settings.localization.dateFormat": "Format de date",
+    "settings.localization.timeFormat": "Format de l'heure",
+    "settings.localization.saveLocalization": "Enregistrer la localisation",
+    "products.title": "Produits",
+    "products.actions.add": "Ajouter un Produit",
+    "sales.title": "Ventes",
+    "sales.actions.new": "Nouvelle Vente",
     "settings.success.saved": "Paramètres enregistrés avec succès"
   },
   de: {
@@ -162,7 +395,79 @@ const translations: Record<Language, Record<string, string>> = {
     "app.name": "ShopOS",
     "app.logout": "Abmelden",
     "nav.dashboard": "Dashboard",
-    // ... more German translations (abbreviated for brevity)
+    "nav.pos": "Point of Sale",
+    "nav.products": "Produkte",
+    "nav.customers": "Kunden",
+    "nav.sales": "Verkäufe",
+    "nav.invoices": "Rechnungen",
+    "nav.settings": "Einstellungen",
+    "settings.title": "Einstellungen",
+    "settings.description": "Verwalten Sie Ihre Kontoeinstellungen und konfigurieren Sie Ihre Store-Einstellungen.",
+    "settings.tabs.store": "Store",
+    "settings.tabs.notifications": "Benachrichtigungen",
+    "settings.tabs.integrations": "Integrationen",
+    "settings.tabs.appearance": "Erscheinungsbild",
+    "settings.store.info": "Store Information",
+    "settings.store.info.description": "Aktualisieren Sie Ihre Store-Details und Geschäftsinformationen.",
+    "settings.store.name": "Store Name",
+    "settings.store.email": "E-Mail-Adresse",
+    "settings.store.phone": "Telefonnummer",
+    "settings.store.taxRate": "Steuersatz (%)",
+    "settings.store.address": "Store Adresse",
+    "settings.store.saveChanges": "Änderungen speichern",
+    "settings.receipt.title": "Beleg Anpassung",
+    "settings.receipt.description": "Passen Sie das Aussehen und den Inhalt der Kundenbelege an.",
+    "settings.receipt.header": "Belegkopfzeile",
+    "settings.receipt.footer": "Belegfußzeile",
+    "settings.receipt.showLogo": "Store Logo anzeigen",
+    "settings.receipt.showContact": "Kontaktinformationen anzeigen",
+    "settings.receipt.includeBarcode": "Barcode einschließen",
+    "settings.notifications.title": "Benachrichtigungseinstellungen",
+    "settings.notifications.description": "Passen Sie an, wann und wie Sie Benachrichtigungen erhalten.",
+    "settings.notifications.emailReceipts": "E-Mail-Belege",
+    "settings.notifications.emailReceipts.description": "Senden Sie E-Mail-Belege nach dem Kauf an Kunden",
+    "settings.notifications.lowStock": "Warnungen bei niedrigem Lagerbestand",
+    "settings.notifications.lowStock.description": "Lassen Sie sich benachrichtigen, wenn der Produktbestand zur Neige geht",
+    "settings.notifications.dailyReports": "Tägliche Verkaufsberichte",
+    "settings.notifications.dailyReports.description": "Erhalten Sie eine tägliche Zusammenfassung der Verkäufe und Transaktionen",
+    "settings.notifications.customerActivity": "Kundenaktivität",
+    "settings.notifications.customerActivity.description": "Lassen Sie sich über neue Kunden und Registrierungen benachrichtigen",
+    "settings.notifications.savePreferences": "Einstellungen speichern",
+    "settings.integrations.title": "Integrationen & Services",
+    "settings.integrations.description": "Verbinden Sie Ihr POS mit externen Services und Plattformen.",
+    "settings.integrations.whatsapp": "WhatsApp Integration",
+    "settings.integrations.whatsapp.description": "Vernetzen Sie sich mit Kunden über WhatsApp für Benachrichtigungen und Support",
+    "settings.integrations.email": "E-Mail-Marketing",
+    "settings.integrations.email.description": "Verbinden Sie sich mit E-Mail-Marketing-Plattformen für Kampagnen",
+    "settings.integrations.accounting": "Buchhaltungssoftware",
+    "settings.integrations.accounting.description": "Synchronisieren Sie Verkaufsdaten mit Ihrem Buchhaltungssystem",
+    "settings.integrations.ecommerce": "E-Commerce-Plattform",
+    "settings.integrations.ecommerce.description": "Verbinden Sie Ihren Online-Shop mit Ihrem POS-System",
+    "settings.integrations.saveIntegrations": "Integrationen speichern",
+    "settings.api.title": "API-Zugriff",
+    "settings.api.description": "Verwalten Sie API-Schlüssel und den Zugriff auf Ihre POS-Daten.",
+    "settings.api.key": "API-Schlüssel",
+    "settings.api.copy": "Kopieren",
+    "settings.api.note": "Dieser Schlüssel bietet Zugriff auf die API Ihres Stores. Bewahren Sie ihn sicher auf.",
+    "settings.api.regenerate": "API-Schlüssel neu generieren",
+    "settings.appearance.title": "Theme-Einstellungen",
+    "settings.appearance.description": "Passen Sie das Erscheinungsbild Ihrer POS-Oberfläche an.",
+    "settings.appearance.theme": "Farbthema",
+    "settings.appearance.darkMode": "Dunkelmodus",
+    "settings.appearance.animations": "Animationen aktivieren",
+    "settings.appearance.compact": "Kompaktmodus",
+    "settings.appearance.saveTheme": "Theme speichern",
+    "settings.localization.title": "Lokalisierung",
+    "settings.localization.description": "Legen Sie Ihre bevorzugte Sprache, Währung und Datumsformate fest.",
+    "settings.localization.language": "Sprache",
+    "settings.localization.currency": "Währung",
+    "settings.localization.dateFormat": "Datumsformat",
+    "settings.localization.timeFormat": "Zeitformat",
+    "settings.localization.saveLocalization": "Lokalisierung speichern",
+    "products.title": "Produkte",
+    "products.actions.add": "Produkt hinzufügen",
+    "sales.title": "Verkäufe",
+    "sales.actions.new": "Neuer Verkauf",
     "settings.success.saved": "Einstellungen erfolgreich gespeichert"
   },
   zh: {
@@ -170,7 +475,79 @@ const translations: Record<Language, Record<string, string>> = {
     "app.name": "ShopOS",
     "app.logout": "登出",
     "nav.dashboard": "仪表板",
-    // ... more Chinese translations (abbreviated for brevity)
+    "nav.pos": "销售点",
+    "nav.products": "产品",
+    "nav.customers": "顾客",
+    "nav.sales": "销售",
+    "nav.invoices": "发票",
+    "nav.settings": "设置",
+    "settings.title": "设置",
+    "settings.description": "管理您的帐户设置并配置您的商店偏好设置。",
+    "settings.tabs.store": "商店",
+    "settings.tabs.notifications": "通知",
+    "settings.tabs.integrations": "集成",
+    "settings.tabs.appearance": "外观",
+    "settings.store.info": "商店信息",
+    "settings.store.info.description": "更新您的商店详细信息和业务信息。",
+    "settings.store.name": "商店名称",
+    "settings.store.email": "电子邮件地址",
+    "settings.store.phone": "电话号码",
+    "settings.store.taxRate": "税率 (%)",
+    "settings.store.address": "商店地址",
+    "settings.store.saveChanges": "保存更改",
+    "settings.receipt.title": "收据定制",
+    "settings.receipt.description": "自定义客户收据的外观和内容。",
+    "settings.receipt.header": "收据标题",
+    "settings.receipt.footer": "收据页脚",
+    "settings.receipt.showLogo": "显示商店标志",
+    "settings.receipt.showContact": "显示联系信息",
+    "settings.receipt.includeBarcode": "包括条形码",
+    "settings.notifications.title": "通知首选项",
+    "settings.notifications.description": "自定义您接收通知的时间和方式。",
+    "settings.notifications.emailReceipts": "电子邮件收据",
+    "settings.notifications.emailReceipts.description": "购买后向客户发送电子邮件收据",
+    "settings.notifications.lowStock": "低库存警报",
+    "settings.notifications.lowStock.description": "当产品库存不足时收到通知",
+    "settings.notifications.dailyReports": "每日销售报告",
+    "settings.notifications.dailyReports.description": "接收销售和交易的每日摘要",
+    "settings.notifications.customerActivity": "客户活动",
+    "settings.notifications.customerActivity.description": "获取有关新客户和注册的通知",
+    "settings.notifications.savePreferences": "保存首选项",
+    "settings.integrations.title": "集成与服务",
+    "settings.integrations.description": "将您的 POS 与外部服务和平台连接。",
+    "settings.integrations.whatsapp": "WhatsApp 集成",
+    "settings.integrations.whatsapp.description": "通过 WhatsApp 与客户联系以获取通知和支持",
+    "settings.integrations.email": "电子邮件营销",
+    "settings.integrations.email.description": "与电子邮件营销平台连接以开展活动",
+    "settings.integrations.accounting": "会计软件",
+    "settings.integrations.accounting.description": "将销售数据与您的会计系统同步",
+    "settings.integrations.ecommerce": "电子商务平台",
+    "settings.integrations.ecommerce.description": "将您的在线商店与您的 POS 系统连接",
+    "settings.integrations.saveIntegrations": "保存集成",
+    "settings.api.title": "API 访问",
+    "settings.api.description": "管理 API 密钥和对您的 POS 数据的访问。",
+    "settings.api.key": "API 密钥",
+    "settings.api.copy": "复制",
+    "settings.api.note": "此密钥提供对您商店 API 的访问权限。 保持安全。",
+    "settings.api.regenerate": "重新生成 API 密钥",
+    "settings.appearance.title": "主题设置",
+    "settings.appearance.description": "自定义您的 POS 界面的外观。",
+    "settings.appearance.theme": "颜色主题",
+    "settings.appearance.darkMode": "黑暗模式",
+    "settings.appearance.animations": "启用动画",
+    "settings.appearance.compact": "紧凑模式",
+    "settings.appearance.saveTheme": "保存主题",
+    "settings.localization.title": "本地化",
+    "settings.localization.description": "设置您喜欢的语言、货币和日期格式。",
+    "settings.localization.language": "语言",
+    "settings.localization.currency": "货币",
+    "settings.localization.dateFormat": "日期格式",
+    "settings.localization.timeFormat": "时间格式",
+    "settings.localization.saveLocalization": "保存本地化",
+    "products.title": "产品",
+    "products.actions.add": "添加产品",
+    "sales.title": "销售",
+    "sales.actions.new": "新销售",
     "settings.success.saved": "设置保存成功"
   },
   ja: {
@@ -178,64 +555,14 @@ const translations: Record<Language, Record<string, string>> = {
     "app.name": "ShopOS",
     "app.logout": "ログアウト",
     "nav.dashboard": "ダッシュボード",
-    // ... more Japanese translations (abbreviated for brevity)
-    "settings.success.saved": "設定が正常に保存されました"
-  },
-  ar: {
-    // Basic Arabic translations
-    "app.name": "ShopOS",
-    "app.logout": "تسجيل خروج",
-    "nav.dashboard": "لوحة القيادة",
-    // ... more Arabic translations (abbreviated for brevity)
-    "settings.success.saved": "تم حفظ الإعدادات بنجاح"
-  }
-};
-
-// Provider component
-export const LanguageProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    // Load language from localStorage or use browser language if available
-    const savedLanguage = localStorage.getItem("language") as Language;
-    if (savedLanguage && Object.keys(translations).includes(savedLanguage)) {
-      return savedLanguage;
-    }
-    
-    // Try to match browser language
-    const browserLang = navigator.language.split('-')[0] as Language;
-    if (Object.keys(translations).includes(browserLang)) {
-      return browserLang;
-    }
-    
-    return "en"; // Default to English
-  });
-
-  // Update language in localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem("language", language);
-    // For RTL languages like Arabic
-    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-  }, [language]);
-
-  // Translation function
-  const t = (key: string, variables?: Record<string, string>): string => {
-    let text = translations[language][key] || translations.en[key] || key;
-    
-    // Replace variables if present
-    if (variables) {
-      Object.entries(variables).forEach(([key, value]) => {
-        text = text.replace(`{${key}}`, value);
-      });
-    }
-    
-    return text;
-  };
-
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {children}
-    </LanguageContext.Provider>
-  );
-};
-
-// Custom hook to use the language context
-export const useLanguage = () => useContext(LanguageContext);
+    "nav.pos": "POS",
+    "nav.products": "製品",
+    "nav.customers": "顧客",
+    "nav.sales": "売上",
+    "nav.invoices": "請求書",
+    "nav.settings": "設定",
+    "settings.title": "設定",
+    "settings.description": "アカウント設定を管理し、ストアの設定を構成します。",
+    "settings.tabs.store": "ストア",
+    "settings.tabs.notifications": "通知",
+    "settings.
