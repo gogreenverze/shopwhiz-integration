@@ -106,7 +106,8 @@ const Settings = () => {
     const selectedTheme = themes.find(t => t.name === themeName);
     if (selectedTheme) {
       setTheme(selectedTheme);
-      toast.info(t("settings.success.themeChanged", { theme: themeName }));
+      // Fixed error: Removed the extra argument here
+      toast.info(t("settings.success.themeChanged"));
     }
   };
 

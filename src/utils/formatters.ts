@@ -1,4 +1,3 @@
-
 import { useCurrency } from "@/contexts/CurrencyContext";
 
 export const formatCurrency = (value: number, currency = 'USD'): string => {
