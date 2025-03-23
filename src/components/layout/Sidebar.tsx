@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SidebarProps {
   open: boolean;
@@ -25,6 +26,7 @@ interface SidebarProps {
 const Sidebar = ({ open, onClose }: SidebarProps) => {
   const location = useLocation();
   const [mounted, setMounted] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     setMounted(true);
@@ -40,7 +42,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
         <div className="flex items-center justify-center my-4">
           <div className="flex items-center space-x-2 bg-sidebar-accent py-2 px-3 rounded-lg">
             <Terminal className="w-5 h-5 text-primary" />
-            <span className="font-semibold text-lg">ShopOS</span>
+            <span className="font-semibold text-lg">{t("app.name")}</span>
           </div>
         </div>
 
@@ -48,37 +50,37 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
           <NavItem
             to="/"
             icon={<LayoutDashboard className="w-5 h-5" />}
-            label="Dashboard"
+            label={t("nav.dashboard")}
             active={isActive("/")}
           />
           <NavItem
             to="/pos"
             icon={<ShoppingBag className="w-5 h-5" />}
-            label="Point of Sale"
+            label={t("nav.pos")}
             active={isActive("/pos")}
           />
           <NavItem
             to="/products"
             icon={<BarChart4 className="w-5 h-5" />}
-            label="Products"
+            label={t("nav.products")}
             active={isActive("/products")}
           />
           <NavItem
             to="/customers"
             icon={<Users className="w-5 h-5" />}
-            label="Customers"
+            label={t("nav.customers")}
             active={isActive("/customers")}
           />
           <NavItem
             to="/sales"
             icon={<Receipt className="w-5 h-5" />}
-            label="Sales"
+            label={t("nav.sales")}
             active={isActive("/sales")}
           />
           <NavItem
             to="/invoices"
             icon={<FileText className="w-5 h-5" />}
-            label="Invoices"
+            label={t("nav.invoices")}
             active={isActive("/invoices")}
           />
         </nav>
@@ -89,7 +91,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
           <NavItem
             to="/settings"
             icon={<Settings className="w-5 h-5" />}
-            label="Settings"
+            label={t("nav.settings")}
             active={isActive("/settings")}
           />
         </nav>
@@ -98,7 +100,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
       <div className="p-4 border-t border-sidebar-border">
         <Button variant="ghost" className="w-full justify-start text-sidebar-foreground">
           <LogOut className="w-5 h-5 mr-2" />
-          <span>Log out</span>
+          <span>{t("app.logout")}</span>
         </Button>
       </div>
     </aside>

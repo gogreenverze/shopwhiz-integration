@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,26 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useCurrency, currencies } from "@/contexts/CurrencyContext";
+import { useTheme, themes } from "@/contexts/ThemeContext";
+import { Copy, RefreshCw } from "lucide-react";
 
 const Settings = () => {
+  const { t, language, setLanguage } = useLanguage();
+  const { currency, setCurrency } = useCurrency();
+  const { 
+    theme, 
+    setTheme,
+    isDarkMode,
+    toggleDarkMode,
+    isCompactMode,
+    toggleCompactMode,
+    areAnimationsEnabled,
+    toggleAnimations
+  } = useTheme();
+
   const [storeInfo, setStoreInfo] = useState({
     name: "My Shop",
     email: "contact@myshop.com",
@@ -32,6 +50,20 @@ const Settings = () => {
     ecommerce: false,
   });
 
+  const [receiptSettings, setReceiptSettings] = useState({
+    header: "Thank you for shopping with us!",
+    footer: "Visit us again soon!",
+    showLogo: true,
+    showContact: true,
+    includeBarcode: true
+  });
+
+  const [apiKey, setApiKey] = useState("sk_7a8b9c0d1e2f3g4h5i6j7k8l9m0n1o2p");
+  const [maskedApiKey, setMaskedApiKey] = useState("••••••••••••••••••••••••••••••");
+
+  const [dateFormat, setDateFormat] = useState("MM/DD/YYYY");
+  const [timeFormat, setTimeFormat] = useState("12");
+
   const handleStoreInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setStoreInfo((prev) => ({ ...prev, [name]: value }));
@@ -39,45 +71,87 @@ const Settings = () => {
 
   const handleNotificationChange = (key: keyof typeof notificationSettings, value: boolean) => {
     setNotificationSettings((prev) => ({ ...prev, [key]: value }));
+    toast.success(t("settings.success.saved"));
   };
 
   const handleIntegrationChange = (key: keyof typeof integrations, value: boolean) => {
     setIntegrations((prev) => ({ ...prev, [key]: value }));
+    toast.success(t("settings.success.saved"));
+  };
+
+  const handleReceiptChange = (key: keyof typeof receiptSettings, value: string | boolean) => {
+    setReceiptSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSaveChanges = () => {
-    toast.success("Settings saved successfully");
+    toast.success(t("settings.success.saved"));
+  };
+
+  const handleCopyApiKey = () => {
+    navigator.clipboard.writeText(apiKey);
+    toast.info(t("settings.success.copied"));
+  };
+
+  const handleRegenerateApiKey = () => {
+    // Generate a random API key
+    const newApiKey = 'sk_' + Array.from({ length: 30 }, () => 
+      '0123456789abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 36)]
+    ).join('');
+    
+    setApiKey(newApiKey);
+    toast.info(t("settings.success.regenerated"));
+  };
+
+  const handleThemeChange = (themeName: string) => {
+    const selectedTheme = themes.find(t => t.name === themeName);
+    if (selectedTheme) {
+      setTheme(selectedTheme);
+      toast.info(t("settings.success.themeChanged", { theme: themeName }));
+    }
+  };
+
+  const handleLanguageChange = (langCode: string) => {
+    setLanguage(langCode as any);
+    toast.success(t("settings.success.saved"));
+  };
+
+  const handleCurrencyChange = (currencyCode: string) => {
+    const selected = currencies.find(c => c.code === currencyCode);
+    if (selected) {
+      setCurrency(selected);
+      toast.success(t("settings.success.saved"));
+    }
   };
 
   return (
     <div className="space-y-6 pb-8 animate-fade-in">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t("settings.title")}</h1>
         <p className="text-muted-foreground">
-          Manage your account settings and configure your store preferences.
+          {t("settings.description")}
         </p>
       </div>
 
       <Tabs defaultValue="store" className="space-y-6">
         <TabsList className="grid grid-cols-4 w-full md:w-auto">
-          <TabsTrigger value="store">Store</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          <TabsTrigger value="appearance">Appearance</TabsTrigger>
+          <TabsTrigger value="store">{t("settings.tabs.store")}</TabsTrigger>
+          <TabsTrigger value="notifications">{t("settings.tabs.notifications")}</TabsTrigger>
+          <TabsTrigger value="integrations">{t("settings.tabs.integrations")}</TabsTrigger>
+          <TabsTrigger value="appearance">{t("settings.tabs.appearance")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="store" className="space-y-6">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Store Information</CardTitle>
+              <CardTitle>{t("settings.store.info")}</CardTitle>
               <CardDescription>
-                Update your store details and business information.
+                {t("settings.store.info.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Store Name</Label>
+                  <Label htmlFor="name">{t("settings.store.name")}</Label>
                   <Input
                     id="name"
                     name="name"
@@ -86,7 +160,7 @@ const Settings = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="email">{t("settings.store.email")}</Label>
                   <Input
                     id="email"
                     name="email"
@@ -96,7 +170,7 @@ const Settings = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">{t("settings.store.phone")}</Label>
                   <Input
                     id="phone"
                     name="phone"
@@ -105,7 +179,7 @@ const Settings = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="taxRate">Tax Rate (%)</Label>
+                  <Label htmlFor="taxRate">{t("settings.store.taxRate")}</Label>
                   <Input
                     id="taxRate"
                     name="taxRate"
@@ -114,7 +188,7 @@ const Settings = () => {
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="address">Store Address</Label>
+                  <Label htmlFor="address">{t("settings.store.address")}</Label>
                   <Input
                     id="address"
                     name="address"
@@ -125,26 +199,34 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges}>Save Changes</Button>
+              <Button onClick={handleSaveChanges}>{t("settings.store.saveChanges")}</Button>
             </CardFooter>
           </Card>
 
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Receipt Customization</CardTitle>
+              <CardTitle>{t("settings.receipt.title")}</CardTitle>
               <CardDescription>
-                Customize the appearance and content of customer receipts.
+                {t("settings.receipt.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="header">Receipt Header</Label>
-                  <Input id="header" placeholder="Thank you for shopping with us!" />
+                  <Label htmlFor="header">{t("settings.receipt.header")}</Label>
+                  <Input 
+                    id="header" 
+                    value={receiptSettings.header}
+                    onChange={(e) => handleReceiptChange("header", e.target.value)} 
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="footer">Receipt Footer</Label>
-                  <Input id="footer" placeholder="Visit us again soon!" />
+                  <Label htmlFor="footer">{t("settings.receipt.footer")}</Label>
+                  <Input 
+                    id="footer" 
+                    value={receiptSettings.footer}
+                    onChange={(e) => handleReceiptChange("footer", e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -152,21 +234,33 @@ const Settings = () => {
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="logo-toggle">Show Store Logo</Label>
-                  <Switch id="logo-toggle" defaultChecked />
+                  <Label htmlFor="logo-toggle">{t("settings.receipt.showLogo")}</Label>
+                  <Switch 
+                    id="logo-toggle" 
+                    checked={receiptSettings.showLogo}
+                    onCheckedChange={(checked) => handleReceiptChange("showLogo", checked)}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="contact-toggle">Show Contact Information</Label>
-                  <Switch id="contact-toggle" defaultChecked />
+                  <Label htmlFor="contact-toggle">{t("settings.receipt.showContact")}</Label>
+                  <Switch 
+                    id="contact-toggle" 
+                    checked={receiptSettings.showContact}
+                    onCheckedChange={(checked) => handleReceiptChange("showContact", checked)}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="barcode-toggle">Include Barcode</Label>
-                  <Switch id="barcode-toggle" defaultChecked />
+                  <Label htmlFor="barcode-toggle">{t("settings.receipt.includeBarcode")}</Label>
+                  <Switch 
+                    id="barcode-toggle" 
+                    checked={receiptSettings.includeBarcode}
+                    onCheckedChange={(checked) => handleReceiptChange("includeBarcode", checked)}
+                  />
                 </div>
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges}>Save Changes</Button>
+              <Button onClick={handleSaveChanges}>{t("settings.store.saveChanges")}</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -174,18 +268,18 @@ const Settings = () => {
         <TabsContent value="notifications" className="space-y-6">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
+              <CardTitle>{t("settings.notifications.title")}</CardTitle>
               <CardDescription>
-                Customize when and how you receive notifications.
+                {t("settings.notifications.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Email Receipts</Label>
+                    <Label>{t("settings.notifications.emailReceipts")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Send email receipts to customers after purchase
+                      {t("settings.notifications.emailReceipts.description")}
                     </p>
                   </div>
                   <Switch
@@ -200,9 +294,9 @@ const Settings = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Low Stock Alerts</Label>
+                    <Label>{t("settings.notifications.lowStock")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Get notified when product inventory is running low
+                      {t("settings.notifications.lowStock.description")}
                     </p>
                   </div>
                   <Switch
@@ -217,9 +311,9 @@ const Settings = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Daily Sales Reports</Label>
+                    <Label>{t("settings.notifications.dailyReports")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Receive daily summary of sales and transactions
+                      {t("settings.notifications.dailyReports.description")}
                     </p>
                   </div>
                   <Switch
@@ -234,9 +328,9 @@ const Settings = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Customer Activity</Label>
+                    <Label>{t("settings.notifications.customerActivity")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Get notified about new customers and registrations
+                      {t("settings.notifications.customerActivity.description")}
                     </p>
                   </div>
                   <Switch
@@ -249,7 +343,7 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges}>Save Preferences</Button>
+              <Button onClick={handleSaveChanges}>{t("settings.notifications.savePreferences")}</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -257,18 +351,18 @@ const Settings = () => {
         <TabsContent value="integrations" className="space-y-6">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Integrations & Services</CardTitle>
+              <CardTitle>{t("settings.integrations.title")}</CardTitle>
               <CardDescription>
-                Connect your POS with external services and platforms.
+                {t("settings.integrations.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">WhatsApp Integration</Label>
+                    <Label className="text-base">{t("settings.integrations.whatsapp")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Connect with customers via WhatsApp for notifications and support
+                      {t("settings.integrations.whatsapp.description")}
                     </p>
                   </div>
                   <Switch
@@ -283,9 +377,9 @@ const Settings = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Email Marketing</Label>
+                    <Label className="text-base">{t("settings.integrations.email")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Connect with email marketing platforms for campaigns
+                      {t("settings.integrations.email.description")}
                     </p>
                   </div>
                   <Switch
@@ -300,9 +394,9 @@ const Settings = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Accounting Software</Label>
+                    <Label className="text-base">{t("settings.integrations.accounting")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Sync sales data with your accounting system
+                      {t("settings.integrations.accounting.description")}
                     </p>
                   </div>
                   <Switch
@@ -317,9 +411,9 @@ const Settings = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">E-commerce Platform</Label>
+                    <Label className="text-base">{t("settings.integrations.ecommerce")}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Connect your online store with your POS system
+                      {t("settings.integrations.ecommerce.description")}
                     </p>
                   </div>
                   <Switch
@@ -332,33 +426,34 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges}>Save Integrations</Button>
+              <Button onClick={handleSaveChanges}>{t("settings.integrations.saveIntegrations")}</Button>
             </CardFooter>
           </Card>
 
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>API Access</CardTitle>
+              <CardTitle>{t("settings.api.title")}</CardTitle>
               <CardDescription>
-                Manage API keys and access to your POS data.
+                {t("settings.api.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="api-key">API Key</Label>
+                <Label htmlFor="api-key">{t("settings.api.key")}</Label>
                 <div className="flex space-x-2">
                   <Input
                     id="api-key"
                     readOnly
-                    value="••••••••••••••••••••••••••••••"
+                    value={maskedApiKey}
                     className="font-mono"
                   />
-                  <Button variant="outline" onClick={() => toast.info("API key copied to clipboard")}>
-                    Copy
+                  <Button variant="outline" onClick={handleCopyApiKey}>
+                    <Copy className="w-4 h-4 mr-2" />
+                    {t("settings.api.copy")}
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground mt-2">
-                  This key provides access to your store's API. Keep it secure.
+                  {t("settings.api.note")}
                 </p>
               </div>
 
@@ -366,9 +461,10 @@ const Settings = () => {
                 <Button 
                   variant="outline" 
                   className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                  onClick={() => toast.info("API key regenerated")}
+                  onClick={handleRegenerateApiKey}
                 >
-                  Regenerate API Key
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  {t("settings.api.regenerate")}
                 </Button>
               </div>
             </CardContent>
@@ -378,30 +474,28 @@ const Settings = () => {
         <TabsContent value="appearance" className="space-y-6">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Theme Settings</CardTitle>
+              <CardTitle>{t("settings.appearance.title")}</CardTitle>
               <CardDescription>
-                Customize the look and feel of your POS interface.
+                {t("settings.appearance.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="theme-selector">Color Theme</Label>
+                <Label htmlFor="theme-selector">{t("settings.appearance.theme")}</Label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1">
-                  {["Default", "Ocean", "Sunset", "Forest", "Monochrome", "Custom"].map(
-                    (theme) => (
-                      <div
-                        key={theme}
-                        className={`border rounded-md p-3 cursor-pointer transition-all ${
-                          theme === "Default"
-                            ? "border-primary bg-primary/5"
-                            : "hover:border-primary/50"
-                        }`}
-                        onClick={() => toast.info(`Theme changed to ${theme}`)}
-                      >
-                        <div className="text-center">{theme}</div>
-                      </div>
-                    )
-                  )}
+                  {themes.map((themeOption) => (
+                    <div
+                      key={themeOption.name}
+                      className={`border rounded-md p-3 cursor-pointer transition-all ${
+                        themeOption.name === theme.name
+                          ? "border-primary bg-primary/5"
+                          : "hover:border-primary/50"
+                      }`}
+                      onClick={() => handleThemeChange(themeOption.name)}
+                    >
+                      <div className="text-center capitalize">{themeOption.name}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -409,84 +503,118 @@ const Settings = () => {
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="dark-mode-toggle">Dark Mode</Label>
-                  <Switch id="dark-mode-toggle" />
+                  <Label htmlFor="dark-mode-toggle">{t("settings.appearance.darkMode")}</Label>
+                  <Switch 
+                    id="dark-mode-toggle" 
+                    checked={isDarkMode}
+                    onCheckedChange={toggleDarkMode}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="animations-toggle">Enable Animations</Label>
-                  <Switch id="animations-toggle" defaultChecked />
+                  <Label htmlFor="animations-toggle">{t("settings.appearance.animations")}</Label>
+                  <Switch 
+                    id="animations-toggle" 
+                    checked={areAnimationsEnabled}
+                    onCheckedChange={toggleAnimations}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="compact-toggle">Compact Mode</Label>
-                  <Switch id="compact-toggle" />
+                  <Label htmlFor="compact-toggle">{t("settings.appearance.compact")}</Label>
+                  <Switch 
+                    id="compact-toggle" 
+                    checked={isCompactMode}
+                    onCheckedChange={toggleCompactMode}
+                  />
                 </div>
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges}>Save Theme</Button>
+              <Button onClick={handleSaveChanges}>{t("settings.appearance.saveTheme")}</Button>
             </CardFooter>
           </Card>
 
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Localization</CardTitle>
+              <CardTitle>{t("settings.localization.title")}</CardTitle>
               <CardDescription>
-                Set your preferred language, currency and date formats.
+                {t("settings.localization.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="language">Language</Label>
-                  <select
-                    id="language"
-                    className="w-full rounded-md border border-border bg-background px-3 py-2"
+                  <Label htmlFor="language">{t("settings.localization.language")}</Label>
+                  <Select
+                    value={language}
+                    onValueChange={handleLanguageChange}
                   >
-                    <option value="en-US">English (US)</option>
-                    <option value="en-GB">English (UK)</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                  </select>
+                    <SelectTrigger id="language">
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English (US)</SelectItem>
+                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="de">Deutsch</SelectItem>
+                      <SelectItem value="zh">中文</SelectItem>
+                      <SelectItem value="ja">日本語</SelectItem>
+                      <SelectItem value="ar">العربية</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="currency">Currency</Label>
-                  <select
-                    id="currency"
-                    className="w-full rounded-md border border-border bg-background px-3 py-2"
+                  <Label htmlFor="currency">{t("settings.localization.currency")}</Label>
+                  <Select
+                    value={currency.code}
+                    onValueChange={handleCurrencyChange}
                   >
-                    <option value="USD">US Dollar ($)</option>
-                    <option value="EUR">Euro (€)</option>
-                    <option value="GBP">British Pound (£)</option>
-                    <option value="JPY">Japanese Yen (¥)</option>
-                    <option value="CAD">Canadian Dollar (C$)</option>
-                  </select>
+                    <SelectTrigger id="currency">
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map(curr => (
+                        <SelectItem key={curr.code} value={curr.code}>
+                          {curr.name} ({curr.symbol})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dateFormat">Date Format</Label>
-                  <select
-                    id="dateFormat"
-                    className="w-full rounded-md border border-border bg-background px-3 py-2"
+                  <Label htmlFor="dateFormat">{t("settings.localization.dateFormat")}</Label>
+                  <Select
+                    value={dateFormat}
+                    onValueChange={setDateFormat}
                   >
-                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                  </select>
+                    <SelectTrigger id="dateFormat">
+                      <SelectValue placeholder="Select date format" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
+                      <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                      <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="timeFormat">Time Format</Label>
-                  <select
-                    id="timeFormat"
-                    className="w-full rounded-md border border-border bg-background px-3 py-2"
+                  <Label htmlFor="timeFormat">{t("settings.localization.timeFormat")}</Label>
+                  <Select
+                    value={timeFormat}
+                    onValueChange={setTimeFormat}
                   >
-                    <option value="12">12 Hour (AM/PM)</option>
-                    <option value="24">24 Hour</option>
-                  </select>
+                    <SelectTrigger id="timeFormat">
+                      <SelectValue placeholder="Select time format" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="12">12 Hour (AM/PM)</SelectItem>
+                      <SelectItem value="24">24 Hour</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges}>Save Localization</Button>
+              <Button onClick={handleSaveChanges}>{t("settings.localization.saveLocalization")}</Button>
             </CardFooter>
           </Card>
         </TabsContent>

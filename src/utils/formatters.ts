@@ -1,4 +1,6 @@
 
+import { useCurrency } from "@/contexts/CurrencyContext";
+
 export const formatCurrency = (value: number, currency = 'USD'): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -48,4 +50,19 @@ export const truncateText = (text: string, maxLength: number): string => {
 
 export const generateId = (): string => {
   return Math.random().toString(36).substring(2, 9);
+};
+
+// Custom hook for using formatting with the current currency
+export const useFormatters = () => {
+  const { formatCurrency: formatWithCurrency } = useCurrency();
+  
+  return {
+    formatCurrency: formatWithCurrency,
+    formatNumber,
+    formatPercentage,
+    formatDate,
+    formatTime,
+    formatDateTime,
+    truncateText
+  };
 };

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import { Terminal } from "lucide-react";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -63,7 +64,5 @@ const Layout = () => {
     </div>
   );
 };
-
-import { Terminal } from "lucide-react";
 
 export default Layout;
