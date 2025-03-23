@@ -32,7 +32,23 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {/* Mobile sidebar with overlay */}
+      <div className="lg:hidden">
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        <div className={`fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+          <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        </div>
+      </div>
+      
+      {/* Desktop sidebar */}
+      <div className="hidden lg:block w-64 flex-shrink-0">
+        <Sidebar open={true} onClose={() => {}} />
+      </div>
       
       <div className="flex-1 flex flex-col min-h-screen">
         <Header 
