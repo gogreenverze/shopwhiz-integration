@@ -10,6 +10,7 @@ interface DashboardCardProps {
   className?: string;
   subtitle?: string;
   footer?: React.ReactNode;
+  isLoading?: boolean;
 }
 
 const DashboardCard = ({
@@ -20,6 +21,7 @@ const DashboardCard = ({
   className,
   subtitle,
   footer,
+  isLoading = false,
 }: DashboardCardProps) => {
   return (
     <Card className={cn("overflow-hidden glass-card", className)}>
@@ -30,13 +32,17 @@ const DashboardCard = ({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        {isLoading ? (
+          <div className="h-8 w-full bg-muted animate-pulse rounded-md"></div>
+        ) : (
+          <div className="text-2xl font-bold">{value}</div>
+        )}
         
         {subtitle && (
           <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
         )}
         
-        {trend !== undefined && (
+        {trend !== undefined && !isLoading && (
           <div className="flex items-center mt-2">
             <span
               className={cn(
