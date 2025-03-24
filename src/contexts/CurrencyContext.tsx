@@ -1,5 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { getCurrency, setCurrency as setApiCurrency } from "@/services/api";
+import { toast } from "sonner";
 
 // Currency type with code, symbol and name
 export type Currency = {
@@ -30,6 +32,8 @@ export const currencies: Currency[] = [
   { code: "ZAR", symbol: "R", name: "South African Rand" },
   { code: "SEK", symbol: "kr", name: "Swedish Krona" },
   { code: "NOK", symbol: "kr", name: "Norwegian Krone" },
+  // Indian regional currencies
+  { code: "INR", symbol: "₹", name: "Indian Rupee" },
 ];
 
 // Currency context type
@@ -37,6 +41,7 @@ type CurrencyContextType = {
   currency: Currency;
   setCurrency: (currency: Currency) => void;
   formatCurrency: (amount: number) => string;
+  isLoading: boolean;
 };
 
 // Create context with default values
@@ -44,24 +49,51 @@ const CurrencyContext = createContext<CurrencyContextType>({
   currency: currencies[0], // Default to USD
   setCurrency: () => {},
   formatCurrency: (amount) => `$${amount.toFixed(2)}`,
+  isLoading: false,
 });
 
 // Provider component
 export const CurrencyProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [currency, setCurrency] = useState<Currency>(() => {
-    // Load currency from localStorage or use default
-    const savedCurrency = localStorage.getItem("currencyCode");
-    if (savedCurrency) {
-      const foundCurrency = currencies.find(c => c.code === savedCurrency);
-      if (foundCurrency) return foundCurrency;
-    }
-    return currencies[0]; // Default to USD
-  });
+  const [currency, setCurrencyState] = useState<Currency>(currencies[0]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Update currency in localStorage when it changes
+  // Load currency from API on mount
   useEffect(() => {
-    localStorage.setItem("currencyCode", currency.code);
-  }, [currency]);
+    const loadCurrency = async () => {
+      try {
+        setIsLoading(true);
+        const result = await getCurrency();
+        const foundCurrency = currencies.find(c => c.code === result.currency);
+        if (foundCurrency) {
+          setCurrencyState(foundCurrency);
+        }
+      } catch (error) {
+        console.error('Failed to load currency setting:', error);
+        // Fallback to localStorage if API fails
+        const savedCurrency = localStorage.getItem("currencyCode");
+        if (savedCurrency) {
+          const foundCurrency = currencies.find(c => c.code === savedCurrency);
+          if (foundCurrency) setCurrencyState(foundCurrency);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCurrency();
+  }, []);
+
+  // Set currency and update both API and localStorage
+  const setCurrency = async (newCurrency: Currency) => {
+    try {
+      setCurrencyState(newCurrency);
+      localStorage.setItem("currencyCode", newCurrency.code);
+      await setApiCurrency(newCurrency.code);
+    } catch (error) {
+      console.error('Failed to update currency setting:', error);
+      toast.error("Failed to update currency setting");
+    }
+  };
 
   // Function to format amounts according to the selected currency
   const formatCurrency = (amount: number): string => {
@@ -73,7 +105,7 @@ export const CurrencyProvider: React.FC<{children: React.ReactNode}> = ({ childr
   };
 
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency, formatCurrency }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency, formatCurrency, isLoading }}>
       {children}
     </CurrencyContext.Provider>
   );

@@ -6,6 +6,7 @@ import { formatCurrency } from "@/utils/formatters";
 import { Product } from "@/data/mockData";
 import { PlusCircle, Eye, Edit, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 interface ProductCardProps {
   product: Product;
@@ -16,6 +17,11 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onAddToCart, onEdit, onDelete, className }: ProductCardProps) => {
+  const { formatCurrency } = useCurrency();
+  const createdAt = typeof product.createdAt === 'string' 
+    ? new Date(product.createdAt) 
+    : product.createdAt;
+
   return (
     <Card className={cn("overflow-hidden transition-all glass-card hover:shadow-lg", className)}>
       <div className="aspect-square overflow-hidden relative group">
