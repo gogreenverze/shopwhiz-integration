@@ -4,16 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/utils/formatters";
 import { Product } from "@/data/mockData";
-import { PlusCircle, Eye } from "lucide-react";
+import { PlusCircle, Eye, Edit, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
+  onEdit?: (productId: string) => void;
+  onDelete?: (productId: string) => void;
   className?: string;
 }
 
-const ProductCard = ({ product, onAddToCart, className }: ProductCardProps) => {
+const ProductCard = ({ product, onAddToCart, onEdit, onDelete, className }: ProductCardProps) => {
   return (
     <Card className={cn("overflow-hidden transition-all glass-card hover:shadow-lg", className)}>
       <div className="aspect-square overflow-hidden relative group">
@@ -36,6 +38,26 @@ const ProductCard = ({ product, onAddToCart, className }: ProductCardProps) => {
           >
             <PlusCircle className="w-4 h-4" />
           </Button>
+          {onEdit && (
+            <Button 
+              size="icon" 
+              variant="outline" 
+              className="rounded-full w-10 h-10 bg-white/80" 
+              onClick={() => onEdit(product.id)}
+            >
+              <Edit className="w-4 h-4" />
+            </Button>
+          )}
+          {onDelete && (
+            <Button 
+              size="icon" 
+              variant="outline" 
+              className="rounded-full w-10 h-10 bg-white/80 hover:bg-red-100" 
+              onClick={() => onDelete(product.id)}
+            >
+              <Trash2 className="w-4 h-4 text-red-500" />
+            </Button>
+          )}
         </div>
 
         {product.stock <= 5 && (
