@@ -1,152 +1,100 @@
-
-import { NavLink, useLocation } from "react-router-dom";
-import {
-  LayoutDashboard,
-  ShoppingBag,
-  Users,
-  Receipt,
-  FileText,
-  Settings,
-  LogOut,
-  ChevronRight,
-  BarChart4,
-  Terminal
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { BarChart, LayoutDashboard, Menu, Package, Receipt, Settings, ShoppingCart, Users, FileText } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface SidebarProps {
-  open: boolean;
-  onClose: () => void;
+  className?: string;
 }
 
-const Sidebar = ({ open, onClose }: SidebarProps) => {
+const Sidebar = ({ className }: SidebarProps) => {
+  const [open, setOpen] = useState(false);
   const location = useLocation();
-  const [mounted, setMounted] = useState(false);
-  const { t } = useLanguage();
+  const { isDarkMode } = useTheme();
 
+  // Close sidebar when route changes on mobile
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setOpen(false);
+  }, [location.pathname]);
 
-  if (!mounted) return null;
+  const navigationItems = [
+    { name: "Dashboard", path: "/", icon: <LayoutDashboard size={20} /> },
+    { name: "Point of Sale", path: "/pos", icon: <ShoppingCart size={20} /> },
+    { name: "Products", path: "/products", icon: <Package size={20} /> },
+    { name: "Sales", path: "/sales", icon: <Receipt size={20} /> },
+    { name: "Reports", path: "/reports", icon: <BarChart size={20} /> },
+    { name: "Customers", path: "/customers", icon: <Users size={20} /> },
+    { name: "Invoices", path: "/invoices", icon: <FileText size={20} /> },
+    { name: "Settings", path: "/settings", icon: <Settings size={20} /> },
+  ];
 
-  const isActive = (path: string) => location.pathname === path;
-
-  return (
-    <aside className="h-full bg-sidebar text-sidebar-foreground flex flex-col border-r border-border">
-      <div className="p-4 space-y-2 flex-1 overflow-y-auto">
-        <div className="flex items-center justify-center my-4">
-          <div className="flex items-center space-x-2 bg-sidebar-accent py-2 px-3 rounded-lg">
-            <Terminal className="w-5 h-5 text-primary" />
-            <span className="font-semibold text-lg">{t("app.name")}</span>
+  const SidebarContent = () => (
+    <div className={cn("flex h-full flex-col gap-2", className)}>
+      <div className="flex h-14 items-center border-b px-4">
+        <Link to="/" className="flex items-center gap-2 font-semibold">
+          <ShoppingCart className="h-6 w-6" />
+          <span className="text-xl">SmartShop</span>
+        </Link>
+      </div>
+      <ScrollArea className="flex-1 overflow-auto py-2">
+        <nav className="grid gap-1 px-2">
+          {navigationItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent transition-colors",
+                location.pathname === item.path
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              {item.icon}
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+      </ScrollArea>
+      <div className="mt-auto border-t p-4">
+        <div className="flex items-center gap-2 rounded-lg bg-muted p-4">
+          <div className="space-y-1">
+            <p className="text-sm font-medium leading-none">
+              Need help?
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Check our documentation
+            </p>
           </div>
         </div>
-
-        <nav className="space-y-1.5">
-          <NavItem
-            to="/"
-            icon={<LayoutDashboard className="w-5 h-5" />}
-            label={t("nav.dashboard")}
-            active={isActive("/")}
-          />
-          <NavItem
-            to="/pos"
-            icon={<ShoppingBag className="w-5 h-5" />}
-            label={t("nav.pos")}
-            active={isActive("/pos")}
-          />
-          <NavItem
-            to="/products"
-            icon={<BarChart4 className="w-5 h-5" />}
-            label={t("nav.products")}
-            active={isActive("/products")}
-          />
-          <NavItem
-            to="/customers"
-            icon={<Users className="w-5 h-5" />}
-            label={t("nav.customers")}
-            active={isActive("/customers")}
-          />
-          <NavItem
-            to="/sales"
-            icon={<Receipt className="w-5 h-5" />}
-            label={t("nav.sales")}
-            active={isActive("/sales")}
-          />
-          <NavItem
-            to="/invoices"
-            icon={<FileText className="w-5 h-5" />}
-            label={t("nav.invoices")}
-            active={isActive("/invoices")}
-          />
-        </nav>
-
-        <Separator className="my-6 bg-sidebar-border" />
-
-        <nav className="space-y-1.5">
-          <NavItem
-            to="/settings"
-            icon={<Settings className="w-5 h-5" />}
-            label={t("nav.settings")}
-            active={isActive("/settings")}
-          />
-        </nav>
       </div>
-
-      <div className="p-4 border-t border-sidebar-border">
-        <Button variant="ghost" className="w-full justify-start text-sidebar-foreground">
-          <LogOut className="w-5 h-5 mr-2" />
-          <span>{t("app.logout")}</span>
-        </Button>
-      </div>
-    </aside>
+    </div>
   );
-};
 
-interface NavItemProps {
-  to: string;
-  icon: React.ReactNode;
-  label: string;
-  active: boolean;
-}
-
-const NavItem = ({ to, icon, label, active }: NavItemProps) => {
   return (
-    <NavLink
-      to={to}
-      className={cn(
-        "flex items-center space-x-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors relative group",
-        active
-          ? "bg-sidebar-accent text-sidebar-accent-foreground"
-          : "hover:bg-sidebar-accent/50 text-sidebar-foreground"
-      )}
-    >
-      <span
-        className={cn(
-          "absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-primary transition-all",
-          active ? "opacity-100" : "opacity-0"
-        )}
-      />
-      <span
-        className={cn(
-          "transition-colors",
-          active && "text-primary"
-        )}
-      >
-        {icon}
-      </span>
-      <span>{label}</span>
-      <ChevronRight 
-        className={cn(
-          "w-4 h-4 ml-auto opacity-0 group-hover:opacity-70 transition-opacity", 
-          active && "opacity-70"
-        )} 
-      />
-    </NavLink>
+    <>
+      <aside className="hidden h-screen border-r lg:block w-64 sticky top-0">
+        <SidebarContent />
+      </aside>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            className="lg:hidden fixed left-4 top-4 z-40"
+          >
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle Menu</span>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="p-0 w-64">
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };
 

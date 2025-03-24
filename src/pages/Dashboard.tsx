@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MetricsDisplay from "@/components/dashboard/MetricsDisplay";
 import SalesChart from "@/components/dashboard/SalesChart";
 import DataTable from "@/components/ui/DataTable";
@@ -11,6 +12,8 @@ import { mockProducts, mockSales } from "@/data/mockData";
 import { formatCurrency, formatDate, formatTime } from "@/utils/formatters";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  
   const recentSalesColumns = [
     {
       id: "date",
@@ -96,6 +99,23 @@ const Dashboard = () => {
     },
   ];
 
+  // Handle button clicks
+  const handleViewReport = () => {
+    navigate('/reports');
+  };
+  
+  const handleViewActivity = () => {
+    navigate('/sales');
+  };
+  
+  const handleViewAllSales = () => {
+    navigate('/sales');
+  };
+  
+  const handleViewAllProducts = () => {
+    navigate('/products');
+  };
+
   return (
     <div className="space-y-6 pb-8 animate-fade-in">
       <div className="flex flex-col gap-2">
@@ -167,7 +187,7 @@ const Dashboard = () => {
               ))}
             </div>
             
-            <Button variant="ghost" size="sm" className="w-full">
+            <Button variant="ghost" size="sm" className="w-full" onClick={handleViewActivity}>
               View all activity
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -177,17 +197,25 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <Card className="glass-card">
-          <CardHeader className="pb-2">
+          <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-lg font-medium">Recent Sales</CardTitle>
+            <Button variant="ghost" size="sm" onClick={handleViewAllSales}>
+              View all
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
           </CardHeader>
           <CardContent>
-            <DataTable data={mockSales} columns={recentSalesColumns} />
+            <DataTable data={mockSales.slice(0, 5)} columns={recentSalesColumns} />
           </CardContent>
         </Card>
 
         <Card className="glass-card">
-          <CardHeader className="pb-2">
+          <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-lg font-medium">Popular Products</CardTitle>
+            <Button variant="ghost" size="sm" onClick={handleViewAllProducts}>
+              View all
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
           </CardHeader>
           <CardContent>
             <DataTable data={mockProducts.slice(0, 5)} columns={popularProductsColumns} />
