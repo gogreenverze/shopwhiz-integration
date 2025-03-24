@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -11,6 +10,15 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+// Health check endpoint
+app.head('/api/settings/health', (req, res) => {
+  res.status(200).end();
+});
+
+app.get('/api/settings/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
 // Products API
 app.get('/api/products', (req, res) => {
@@ -226,7 +234,7 @@ app.post('/api/sales', (req, res) => {
   );
 });
 
-// Dashboard data
+// Dashboard API
 app.get('/api/dashboard/summary', (req, res) => {
   const timeRange = req.query.timeRange || 'today';
   let dateFilter;

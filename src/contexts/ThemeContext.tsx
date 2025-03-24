@@ -74,8 +74,10 @@ export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({ children 
 
   // Apply theme and mode classes to document
   useEffect(() => {
+    // Clear existing theme classes first
+    document.documentElement.classList.remove(...themes.map(t => t.className));
+    
     // Apply theme
-    document.documentElement.className = "";
     document.documentElement.classList.add(theme.className);
     
     // Apply dark/light mode
@@ -104,6 +106,8 @@ export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({ children 
     localStorage.setItem("darkMode", String(isDarkMode));
     localStorage.setItem("compactMode", String(isCompactMode));
     localStorage.setItem("animations", String(areAnimationsEnabled));
+    
+    console.log("Theme applied:", theme.name, theme.className);
   }, [theme, isDarkMode, isCompactMode, areAnimationsEnabled]);
 
   // Toggle functions

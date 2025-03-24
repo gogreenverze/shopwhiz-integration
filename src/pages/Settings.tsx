@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +12,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency, currencies } from "@/contexts/CurrencyContext";
 import { useTheme, themes } from "@/contexts/ThemeContext";
 import { Copy, RefreshCw } from "lucide-react";
+import { setCurrency as apiSetCurrency } from "@/services/api";
 
 const Settings = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -63,6 +63,8 @@ const Settings = () => {
 
   const [dateFormat, setDateFormat] = useState("MM/DD/YYYY");
   const [timeFormat, setTimeFormat] = useState("12");
+  
+  const [hasApiError, setHasApiError] = useState(false);
 
   const handleStoreInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -93,7 +95,6 @@ const Settings = () => {
   };
 
   const handleRegenerateApiKey = () => {
-    // Generate a random API key
     const newApiKey = 'sk_' + Array.from({ length: 30 }, () => 
       '0123456789abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 36)]
     ).join('');
@@ -105,8 +106,8 @@ const Settings = () => {
   const handleThemeChange = (themeName: string) => {
     const selectedTheme = themes.find(t => t.name === themeName);
     if (selectedTheme) {
+      console.log("Theme change requested:", selectedTheme.name, selectedTheme.className);
       setTheme(selectedTheme);
-      // Fixed error: Removed the extra argument here
       toast.info(t("settings.success.themeChanged"));
     }
   };
@@ -116,13 +117,41 @@ const Settings = () => {
     toast.success(t("settings.success.saved"));
   };
 
-  const handleCurrencyChange = (currencyCode: string) => {
+  const handleCurrencyChange = async (currencyCode: string) => {
     const selected = currencies.find(c => c.code === currencyCode);
-    if (selected) {
+    if (!selected) return;
+    
+    try {
+      if (!hasApiError) {
+        await apiSetCurrency(currencyCode);
+      }
+      
       setCurrency(selected);
       toast.success(t("settings.success.saved"));
+    } catch (error) {
+      setHasApiError(true);
+      console.error("Currency API error:", error);
+      setCurrency(selected);
+      toast.success(t("settings.success.saved") + " (local only)");
     }
   };
+
+  useEffect(() => {
+    const checkApiStatus = async () => {
+      try {
+        const response = await fetch(import.meta.env.PROD 
+          ? '/api/settings/health'
+          : 'http://localhost:3001/api/settings/health', { method: 'HEAD' });
+        
+        setHasApiError(!response.ok);
+      } catch (error) {
+        console.warn("API health check failed:", error);
+        setHasApiError(true);
+      }
+    };
+    
+    checkApiStatus();
+  }, []);
 
   return (
     <div className="space-y-6 pb-8 animate-fade-in">
@@ -131,6 +160,11 @@ const Settings = () => {
         <p className="text-muted-foreground">
           {t("settings.description")}
         </p>
+        {hasApiError && (
+          <div className="p-3 mt-2 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 rounded-md text-sm">
+            Warning: Backend server not detected. Settings will be saved locally only.
+          </div>
+        )}
       </div>
 
       <Tabs defaultValue="store" className="space-y-6">
