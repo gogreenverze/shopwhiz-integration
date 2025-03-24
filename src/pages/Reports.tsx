@@ -20,7 +20,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const Reports = () => {
   const [selectedTab, setSelectedTab] = useState("sales");
-  const [reportType, setReportType] = useState("monthly");
+  const [reportType, setReportType] = useState<"daily" | "weekly" | "monthly" | "yearly">("monthly");
   const [selectedMonth, setSelectedMonth] = useState<Date | undefined>(new Date());
   const { formatCurrency, formatDate } = useFormatters();
   const { t } = useLanguage();
@@ -91,7 +91,7 @@ const Reports = () => {
         <div className="flex flex-wrap gap-2">
           <Select
             value={reportType}
-            onValueChange={setReportType}
+            onValueChange={(value: "daily" | "weekly" | "monthly" | "yearly") => setReportType(value)}
           >
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Report Type" />

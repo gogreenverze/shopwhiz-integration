@@ -143,7 +143,7 @@ const SalesReportChart = ({ reportType }: SalesReportChartProps) => {
             tick={{ fontSize: 12 }} 
             tickLine={false}
             axisLine={false}
-            tickFormatter={(value) => formatCurrency(value, { notation: 'compact' })}
+            tickFormatter={(value) => formatCurrency(value)}
             className="text-muted-foreground"
           />
           <Tooltip 

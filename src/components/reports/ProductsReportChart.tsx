@@ -6,14 +6,22 @@ import { useFormatters } from "@/utils/formatters";
 const ProductsReportChart = () => {
   const { formatCurrency } = useFormatters();
   
-  // Get top selling products by value
+  // Define a default sold value for products that don't have it
   const topProducts = [...mockProducts]
-    .sort((a, b) => b.price * b.sold - a.price * a.sold)
+    .sort((a, b) => {
+      // Calculate sales value based on price (assume 10 sold if none specified)
+      const aSold = 'sold' in a ? (a.sold as number) : 10;
+      const bSold = 'sold' in b ? (b.sold as number) : 10;
+      return b.price * bSold - a.price * aSold;
+    })
     .slice(0, 10)
-    .map(product => ({
-      name: product.name.length > 20 ? product.name.slice(0, 20) + '...' : product.name,
-      value: product.price * product.sold
-    }));
+    .map(product => {
+      const soldQuantity = 'sold' in product ? (product.sold as number) : 10;
+      return {
+        name: product.name.length > 20 ? product.name.slice(0, 20) + '...' : product.name,
+        value: product.price * soldQuantity
+      };
+    });
 
   return (
     <div className="h-[350px] w-full">
@@ -34,7 +42,7 @@ const ProductsReportChart = () => {
             tick={{ fontSize: 12 }} 
             tickLine={false}
             axisLine={false}
-            tickFormatter={(value) => formatCurrency(value, { notation: 'compact' })}
+            tickFormatter={(value) => formatCurrency(value)}
             className="text-muted-foreground"
           />
           <YAxis 

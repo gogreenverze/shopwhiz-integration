@@ -1,4 +1,3 @@
-
 import { generateId } from "@/utils/formatters";
 
 export interface Product {
@@ -10,6 +9,7 @@ export interface Product {
   category: string;
   image?: string;
   barcode?: string;
+  sold?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +63,7 @@ export const mockProducts: Product[] = [
     category: "Beverages",
     image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=400&h=400&auto=format&fit=crop",
     barcode: "1234567890123",
+    sold: 35,
     createdAt: new Date(2023, 1, 15),
     updatedAt: new Date(2023, 1, 15),
   },
@@ -74,6 +75,7 @@ export const mockProducts: Product[] = [
     stock: 32,
     category: "Merchandise",
     image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?q=80&w=400&h=400&auto=format&fit=crop",
+    sold: 24,
     createdAt: new Date(2023, 2, 10),
     updatedAt: new Date(2023, 2, 10),
   },
@@ -85,6 +87,7 @@ export const mockProducts: Product[] = [
     stock: 18,
     category: "Bakery",
     image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=400&h=400&auto=format&fit=crop",
+    sold: 45,
     createdAt: new Date(2023, 3, 5),
     updatedAt: new Date(2023, 3, 5),
   },
@@ -96,6 +99,7 @@ export const mockProducts: Product[] = [
     stock: 27,
     category: "Beverages",
     image: "https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?q=80&w=400&h=400&auto=format&fit=crop",
+    sold: 18,
     createdAt: new Date(2023, 3, 12),
     updatedAt: new Date(2023, 3, 12),
   },
@@ -107,6 +111,7 @@ export const mockProducts: Product[] = [
     stock: 15,
     category: "Bakery",
     image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=400&h=400&auto=format&fit=crop",
+    sold: 30,
     createdAt: new Date(2023, 4, 2),
     updatedAt: new Date(2023, 4, 2),
   },
@@ -118,6 +123,7 @@ export const mockProducts: Product[] = [
     stock: 20,
     category: "Merchandise",
     image: "https://images.unsplash.com/photo-1592910147752-a96b0ac9cb3e?q=80&w=400&h=400&auto=format&fit=crop",
+    sold: 12,
     createdAt: new Date(2023, 4, 20),
     updatedAt: new Date(2023, 4, 20),
   },
@@ -310,8 +316,6 @@ export interface SalesSummary {
 }
 
 export const getSalesSummary = (timeRange: TimeRange): SalesSummary => {
-  // In a real app, this would filter sales based on the time range
-  // For this mock, we'll just return different values for different ranges
   switch (timeRange) {
     case "today":
       return { 
