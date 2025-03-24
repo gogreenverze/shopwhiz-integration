@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Supported languages
@@ -565,4 +566,434 @@ const translations: Record<Language, Record<string, string>> = {
     "settings.description": "アカウント設定を管理し、ストアの設定を構成します。",
     "settings.tabs.store": "ストア",
     "settings.tabs.notifications": "通知",
-    "settings.
+    "settings.tabs.integrations": "統合",
+    "settings.tabs.appearance": "外観",
+    "products.title": "製品",
+    "products.actions.add": "製品を追加",
+    "sales.title": "売上",
+    "sales.actions.new": "新規売上",
+    "settings.success.saved": "設定が正常に保存されました"
+  },
+  ar: {
+    // Arabic translations
+    "app.name": "شوب أو إس",
+    "app.logout": "تسجيل خروج",
+    "nav.dashboard": "لوحة التحكم",
+    "nav.pos": "نقطة البيع",
+    "nav.products": "المنتجات",
+    "nav.customers": "العملاء",
+    "nav.sales": "المبيعات",
+    "nav.invoices": "الفواتير",
+    "nav.settings": "الإعدادات",
+    "settings.title": "الإعدادات",
+    "products.title": "المنتجات",
+    "products.actions.add": "إضافة منتج",
+    "sales.title": "المبيعات",
+    "sales.actions.new": "مبيعات جديدة"
+  },
+  hi: {
+    // Hindi translations
+    "app.name": "शॉपओएस",
+    "app.logout": "लॉग आउट",
+    "nav.dashboard": "डैशबोर्ड",
+    "nav.pos": "बिक्री केंद्र",
+    "nav.products": "उत्पाद",
+    "nav.customers": "ग्राहक",
+    "nav.sales": "बिक्री",
+    "nav.invoices": "चालान",
+    "nav.settings": "सेटिंग्स",
+    "settings.title": "सेटिंग्स",
+    "products.title": "उत्पाद",
+    "products.actions.add": "उत्पाद जोड़ें",
+    "sales.title": "बिक्री",
+    "sales.actions.new": "नई बिक्री"
+  },
+  bn: {
+    // Bengali translations
+    "app.name": "শপওএস",
+    "app.logout": "লগ আউট",
+    "nav.dashboard": "ড্যাশবোর্ড",
+    "nav.pos": "বিক্রয় কেন্দ্র",
+    "nav.products": "পণ্য",
+    "nav.customers": "গ্রাহক",
+    "nav.sales": "বিক্রয়",
+    "nav.invoices": "চালান",
+    "nav.settings": "সেটিংস",
+    "settings.title": "সেটিংস",
+    "products.title": "পণ্য",
+    "products.actions.add": "পণ্য যোগ করুন",
+    "sales.title": "বিক্রয়",
+    "sales.actions.new": "নতুন বিক্রয়"
+  },
+  te: {
+    // Telugu translations
+    "app.name": "షాప్ఓఎస్",
+    "app.logout": "లాగ్ అవుట్",
+    "nav.dashboard": "డాష్బోర్డ్",
+    "nav.pos": "విక్రయ కేంద్రం",
+    "nav.products": "ఉత్పత్తులు",
+    "nav.customers": "వినియోగదారులు",
+    "nav.sales": "అమ్మకాలు",
+    "nav.invoices": "ఇన్వాయిస్లు",
+    "nav.settings": "సెట్టింగ్లు",
+    "settings.title": "సెట్టింగ్లు",
+    "products.title": "ఉత్పత్తులు",
+    "products.actions.add": "ఉత్పత్తిని జోడించండి",
+    "sales.title": "అమ్మకాలు",
+    "sales.actions.new": "కొత్త అమ్మకం"
+  },
+  ta: {
+    // Tamil translations
+    "app.name": "ஷாப்ஓஎஸ்",
+    "app.logout": "வெளியேறு",
+    "nav.dashboard": "டாஷ்போர்டு",
+    "nav.pos": "விற்பனை மையம்",
+    "nav.products": "பொருட்கள்",
+    "nav.customers": "வாடிக்கையாளர்கள்",
+    "nav.sales": "விற்பனை",
+    "nav.invoices": "இன்வாய்ஸ்கள்",
+    "nav.settings": "அமைப்புகள்",
+    "settings.title": "அமைப்புகள்",
+    "products.title": "பொருட்கள்",
+    "products.actions.add": "பொருளைச் சேர்க்கவும்",
+    "sales.title": "விற்பனை",
+    "sales.actions.new": "புதிய விற்பனை"
+  },
+  mr: {
+    // Marathi translations
+    "app.name": "शॉपओएस",
+    "app.logout": "लॉग आउट",
+    "nav.dashboard": "डॅशबोर्ड",
+    "nav.pos": "विक्री केंद्र",
+    "nav.products": "उत्पादने",
+    "nav.customers": "ग्राहक",
+    "nav.sales": "विक्री",
+    "nav.invoices": "चलने",
+    "nav.settings": "सेटिंग्ज",
+    "settings.title": "सेटिंग्ज",
+    "products.title": "उत्पादने",
+    "products.actions.add": "उत्पादन जोडा",
+    "sales.title": "विक्री",
+    "sales.actions.new": "नवीन विक्री"
+  },
+  gu: {
+    // Gujarati translations
+    "app.name": "શોપઓએસ",
+    "app.logout": "લોગ આઉટ",
+    "nav.dashboard": "ડેશબોર્ડ",
+    "nav.pos": "વેચાણ કેન્દ્ર",
+    "nav.products": "ઉત્પાદનો",
+    "nav.customers": "ગ્રાહકો",
+    "nav.sales": "વેચાણ",
+    "nav.invoices": "ઇનવૉઇસ",
+    "nav.settings": "સેટિંગ્સ",
+    "settings.title": "સેટિંગ્સ",
+    "products.title": "ઉત્પાદનો",
+    "products.actions.add": "ઉત્પાદન ઉમેરો",
+    "sales.title": "વેચાણ",
+    "sales.actions.new": "નવું વેચાણ"
+  },
+  kn: {
+    // Kannada translations
+    "app.name": "ಶಾಪ್ಓಎಸ್",
+    "app.logout": "ಲಾಗ್ ಔಟ್",
+    "nav.dashboard": "ಡ್ಯಾಶ್ಬೋರ್ಡ್",
+    "nav.pos": "ಮಾರಾಟ ಕೇಂದ್ರ",
+    "nav.products": "ಉತ್ಪನ್ನಗಳು",
+    "nav.customers": "ಗ್ರಾಹಕರು",
+    "nav.sales": "ಮಾರಾಟ",
+    "nav.invoices": "ಇನ್ವಾಯ್ಸ್‌ಗಳು",
+    "nav.settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "settings.title": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "products.title": "ಉತ್ಪನ್ನಗಳು",
+    "products.actions.add": "ಉತ್ಪನ್ನವನ್ನು ಸೇರಿಸಿ",
+    "sales.title": "ಮಾರಾಟ",
+    "sales.actions.new": "ಹೊಸ ಮಾರಾಟ"
+  },
+  ml: {
+    // Malayalam translations
+    "app.name": "ഷോപ്പ്ഓഎസ്",
+    "app.logout": "ലോഗ് ഔട്ട്",
+    "nav.dashboard": "ഡാഷ്ബോർഡ്",
+    "nav.pos": "വിൽപ്പന കേന്ദ്രം",
+    "nav.products": "ഉൽപ്പന്നങ്ങൾ",
+    "nav.customers": "ഉപഭോക്താക്കൾ",
+    "nav.sales": "വിൽപ്പന",
+    "nav.invoices": "ഇൻവോയ്സുകൾ",
+    "nav.settings": "ക്രമീകരണങ്ങൾ",
+    "settings.title": "ക്രമീകരണങ്ങൾ",
+    "products.title": "ഉൽപ്പന്നങ്ങൾ",
+    "products.actions.add": "ഉൽപ്പന്നം ചേർക്കുക",
+    "sales.title": "വിൽപ്പന",
+    "sales.actions.new": "പുതിയ വിൽപ്പന"
+  },
+  pa: {
+    // Punjabi translations
+    "app.name": "ਸ਼ੌਪਓਐਸ",
+    "app.logout": "ਲੌਗ ਆਉਟ",
+    "nav.dashboard": "ਡੈਸ਼ਬੋਰਡ",
+    "nav.pos": "ਵਿਕਰੀ ਕੇਂਦਰ",
+    "nav.products": "ਉਤਪਾਦ",
+    "nav.customers": "ਗਾਹਕ",
+    "nav.sales": "ਵਿਕਰੀ",
+    "nav.invoices": "ਚਲਾਨ",
+    "nav.settings": "ਸੈਟਿੰਗਾਂ",
+    "settings.title": "ਸੈਟਿੰਗਾਂ",
+    "products.title": "ਉਤਪਾਦ",
+    "products.actions.add": "ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ",
+    "sales.title": "ਵਿਕਰੀ",
+    "sales.actions.new": "ਨਵੀਂ ਵਿਕਰੀ"
+  },
+  ur: {
+    // Urdu translations
+    "app.name": "شاپ او ایس",
+    "app.logout": "لاگ آؤٹ",
+    "nav.dashboard": "ڈیش بورڈ",
+    "nav.pos": "فروخت مرکز",
+    "nav.products": "مصنوعات",
+    "nav.customers": "گاہک",
+    "nav.sales": "فروخت",
+    "nav.invoices": "انوائس",
+    "nav.settings": "ترتیبات",
+    "settings.title": "ترتیبات",
+    "products.title": "مصنوعات",
+    "products.actions.add": "مصنوعات شامل کریں",
+    "sales.title": "فروخت",
+    "sales.actions.new": "نئی فروخت"
+  },
+  ru: {
+    // Russian translations
+    "app.name": "ShopOS",
+    "app.logout": "Выйти",
+    "nav.dashboard": "Панель управления",
+    "nav.pos": "Точка продажи",
+    "nav.products": "Товары",
+    "nav.customers": "Клиенты",
+    "nav.sales": "Продажи",
+    "nav.invoices": "Счета",
+    "nav.settings": "Настройки",
+    "settings.title": "Настройки",
+    "products.title": "Товары",
+    "products.actions.add": "Добавить товар",
+    "sales.title": "Продажи",
+    "sales.actions.new": "Новая продажа"
+  },
+  pt: {
+    // Portuguese translations
+    "app.name": "ShopOS",
+    "app.logout": "Sair",
+    "nav.dashboard": "Painel de Controle",
+    "nav.pos": "Ponto de Venda",
+    "nav.products": "Produtos",
+    "nav.customers": "Clientes",
+    "nav.sales": "Vendas",
+    "nav.invoices": "Faturas",
+    "nav.settings": "Configurações",
+    "settings.title": "Configurações",
+    "products.title": "Produtos",
+    "products.actions.add": "Adicionar Produto",
+    "sales.title": "Vendas",
+    "sales.actions.new": "Nova Venda"
+  },
+  id: {
+    // Indonesian translations
+    "app.name": "ShopOS",
+    "app.logout": "Keluar",
+    "nav.dashboard": "Dasbor",
+    "nav.pos": "Titik Penjualan",
+    "nav.products": "Produk",
+    "nav.customers": "Pelanggan",
+    "nav.sales": "Penjualan",
+    "nav.invoices": "Faktur",
+    "nav.settings": "Pengaturan",
+    "settings.title": "Pengaturan",
+    "products.title": "Produk",
+    "products.actions.add": "Tambah Produk",
+    "sales.title": "Penjualan",
+    "sales.actions.new": "Penjualan Baru"
+  },
+  ko: {
+    // Korean translations
+    "app.name": "ShopOS",
+    "app.logout": "로그아웃",
+    "nav.dashboard": "대시보드",
+    "nav.pos": "판매 시점",
+    "nav.products": "제품",
+    "nav.customers": "고객",
+    "nav.sales": "판매",
+    "nav.invoices": "청구서",
+    "nav.settings": "설정",
+    "settings.title": "설정",
+    "products.title": "제품",
+    "products.actions.add": "제품 추가",
+    "sales.title": "판매",
+    "sales.actions.new": "새 판매"
+  },
+  tr: {
+    // Turkish translations
+    "app.name": "ShopOS",
+    "app.logout": "Çıkış Yap",
+    "nav.dashboard": "Gösterge Paneli",
+    "nav.pos": "Satış Noktası",
+    "nav.products": "Ürünler",
+    "nav.customers": "Müşteriler",
+    "nav.sales": "Satışlar",
+    "nav.invoices": "Faturalar",
+    "nav.settings": "Ayarlar",
+    "settings.title": "Ayarlar",
+    "products.title": "Ürünler",
+    "products.actions.add": "Ürün Ekle",
+    "sales.title": "Satışlar",
+    "sales.actions.new": "Yeni Satış"
+  },
+  vi: {
+    // Vietnamese translations
+    "app.name": "ShopOS",
+    "app.logout": "Đăng xuất",
+    "nav.dashboard": "Bảng điều khiển",
+    "nav.pos": "Điểm bán hàng",
+    "nav.products": "Sản phẩm",
+    "nav.customers": "Khách hàng",
+    "nav.sales": "Bán hàng",
+    "nav.invoices": "Hóa đơn",
+    "nav.settings": "Cài đặt",
+    "settings.title": "Cài đặt",
+    "products.title": "Sản phẩm",
+    "products.actions.add": "Thêm sản phẩm",
+    "sales.title": "Bán hàng",
+    "sales.actions.new": "Bán hàng mới"
+  },
+  ms: {
+    // Malay translations
+    "app.name": "ShopOS",
+    "app.logout": "Log Keluar",
+    "nav.dashboard": "Papan Pemuka",
+    "nav.pos": "Titik Jualan",
+    "nav.products": "Produk",
+    "nav.customers": "Pelanggan",
+    "nav.sales": "Jualan",
+    "nav.invoices": "Invois",
+    "nav.settings": "Tetapan",
+    "settings.title": "Tetapan",
+    "products.title": "Produk",
+    "products.actions.add": "Tambah Produk",
+    "sales.title": "Jualan",
+    "sales.actions.new": "Jualan Baru"
+  },
+  th: {
+    // Thai translations
+    "app.name": "ShopOS",
+    "app.logout": "ออกจากระบบ",
+    "nav.dashboard": "แดชบอร์ด",
+    "nav.pos": "จุดขาย",
+    "nav.products": "สินค้า",
+    "nav.customers": "ลูกค้า",
+    "nav.sales": "ยอดขาย",
+    "nav.invoices": "ใบแจ้งหนี้",
+    "nav.settings": "การตั้งค่า",
+    "settings.title": "การตั้งค่า",
+    "products.title": "สินค้า",
+    "products.actions.add": "เพิ่มสินค้า",
+    "sales.title": "ยอดขาย",
+    "sales.actions.new": "ยอดขายใหม่"
+  },
+  pl: {
+    // Polish translations
+    "app.name": "ShopOS",
+    "app.logout": "Wyloguj",
+    "nav.dashboard": "Panel",
+    "nav.pos": "Punkt sprzedaży",
+    "nav.products": "Produkty",
+    "nav.customers": "Klienci",
+    "nav.sales": "Sprzedaż",
+    "nav.invoices": "Faktury",
+    "nav.settings": "Ustawienia",
+    "settings.title": "Ustawienia",
+    "products.title": "Produkty",
+    "products.actions.add": "Dodaj produkt",
+    "sales.title": "Sprzedaż",
+    "sales.actions.new": "Nowa sprzedaż"
+  },
+  nl: {
+    // Dutch translations
+    "app.name": "ShopOS",
+    "app.logout": "Uitloggen",
+    "nav.dashboard": "Dashboard",
+    "nav.pos": "Verkooppunt",
+    "nav.products": "Producten",
+    "nav.customers": "Klanten",
+    "nav.sales": "Verkoop",
+    "nav.invoices": "Facturen",
+    "nav.settings": "Instellingen",
+    "settings.title": "Instellingen",
+    "products.title": "Producten",
+    "products.actions.add": "Product toevoegen",
+    "sales.title": "Verkoop",
+    "sales.actions.new": "Nieuwe verkoop"
+  },
+  it: {
+    // Italian translations
+    "app.name": "ShopOS",
+    "app.logout": "Disconnetti",
+    "nav.dashboard": "Dashboard",
+    "nav.pos": "Punto vendita",
+    "nav.products": "Prodotti",
+    "nav.customers": "Clienti",
+    "nav.sales": "Vendite",
+    "nav.invoices": "Fatture",
+    "nav.settings": "Impostazioni",
+    "settings.title": "Impostazioni",
+    "products.title": "Prodotti",
+    "products.actions.add": "Aggiungi prodotto",
+    "sales.title": "Vendite",
+    "sales.actions.new": "Nuova vendita"
+  }
+};
+
+// Language Provider component
+export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Get user's browser language or use default
+  const getBrowserLanguage = (): Language => {
+    const browserLang = navigator.language.split('-')[0];
+    return (Object.keys(translations).includes(browserLang) ? browserLang : 'en') as Language;
+  };
+
+  const [language, setLanguage] = useState<Language>(() => {
+    // Try to get language from localStorage first
+    const storedLang = localStorage.getItem('appLanguage');
+    return (storedLang && Object.keys(translations).includes(storedLang) 
+      ? storedLang 
+      : getBrowserLanguage()) as Language;
+  });
+
+  // Update localStorage when language changes
+  useEffect(() => {
+    localStorage.setItem('appLanguage', language);
+    document.documentElement.lang = language;
+  }, [language]);
+
+  // Translation function
+  const t = (key: string, variables?: Record<string, string>): string => {
+    let text = translations[language][key] || translations.en[key] || key;
+    
+    // Replace variables if provided
+    if (variables) {
+      Object.entries(variables).forEach(([varName, varValue]) => {
+        text = text.replace(`{${varName}}`, varValue);
+      });
+    }
+    
+    return text;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+// Custom hook for using language context
+export const useLanguage = () => useContext(LanguageContext);
+
+export default LanguageProvider;
