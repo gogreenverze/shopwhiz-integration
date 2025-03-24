@@ -28,7 +28,7 @@ const Reports = () => {
   const { t } = useLanguage();
 
   const handleGeneratePDF = () => {
-    generatePDF(`${selectedTab}-${reportType}-report`, `${selectedTab.toUpperCase()} ${reportType} Report`);
+    generatePDF(`${selectedTab}-report-content`, `${selectedTab.toUpperCase()} ${reportType} Report`);
     toast.success(`${selectedTab.charAt(0).toUpperCase() + selectedTab.slice(1)} report PDF generated successfully`);
   };
 
@@ -81,130 +81,136 @@ const Reports = () => {
         <Tabs 
           value={selectedTab} 
           onValueChange={setSelectedTab}
-          className="w-full sm:w-auto"
+          className="w-full"
         >
-          <TabsList className="grid grid-cols-3 w-full sm:w-[400px]">
-            <TabsTrigger value="sales">Sales Report</TabsTrigger>
-            <TabsTrigger value="products">Products Report</TabsTrigger>
-            <TabsTrigger value="invoices">Invoices</TabsTrigger>
-          </TabsList>
-        
-          <div className="flex flex-wrap gap-2 mt-4 sm:mt-0 sm:hidden">
-            <Select
-              value={reportType}
-              onValueChange={(value: ReportType) => setReportType(value)}
-            >
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Report Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="daily">Daily</SelectItem>
-                <SelectItem value="weekly">Weekly</SelectItem>
-                <SelectItem value="monthly">Monthly</SelectItem>
-                <SelectItem value="yearly">Yearly</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex flex-col sm:flex-row justify-between gap-4">
+            <TabsList className="grid grid-cols-3 w-full sm:w-[400px]">
+              <TabsTrigger value="sales">Sales Report</TabsTrigger>
+              <TabsTrigger value="products">Products Report</TabsTrigger>
+              <TabsTrigger value="invoices">Invoices</TabsTrigger>
+            </TabsList>
+          
+            <div className="flex flex-wrap gap-2 mt-4 sm:mt-0 sm:hidden">
+              <Select
+                value={reportType}
+                onValueChange={(value: ReportType) => setReportType(value)}
+              >
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Report Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">Daily</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="yearly">Yearly</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[160px] justify-start text-left font-normal">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {selectedMonth ? format(selectedMonth, 'MMMM yyyy') : <span>Pick a month</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedMonth}
-                  onSelect={setSelectedMonth}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[160px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedMonth ? format(selectedMonth, 'MMMM yyyy') : <span>Pick a month</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={selectedMonth}
+                    onSelect={setSelectedMonth}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
 
-            <Button variant="outline" onClick={handleGeneratePDF}>
-              <FileText className="mr-2 h-4 w-4" />
-              Export PDF
-            </Button>
-            
-            <Button variant="outline" onClick={handleExportCSV}>
-              <Table className="mr-2 h-4 w-4" />
-              Export CSV
-            </Button>
+              <Button variant="outline" onClick={handleGeneratePDF}>
+                <FileText className="mr-2 h-4 w-4" />
+                Export PDF
+              </Button>
+              
+              <Button variant="outline" onClick={handleExportCSV}>
+                <Table className="mr-2 h-4 w-4" />
+                Export CSV
+              </Button>
+            </div>
           </div>
 
-          <TabsContent value="sales" className="mt-0">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card className="lg:col-span-2 glass-card">
+          <TabsContent value="sales" className="mt-4">
+            <div id="sales-report-content" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2 glass-card">
+                  <CardHeader>
+                    <CardTitle>Sales Trend</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <SalesReportChart reportType={reportType} />
+                  </CardContent>
+                </Card>
+
+                <Card className="glass-card">
+                  <CardHeader>
+                    <CardTitle>Sales Distribution</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex justify-center">
+                    <PieChart className="h-52 w-52 text-primary/80" />
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card className="mt-6 glass-card">
                 <CardHeader>
-                  <CardTitle>Sales Trend</CardTitle>
+                  <CardTitle>Sales Data</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SalesReportChart reportType={reportType} />
-                </CardContent>
-              </Card>
-
-              <Card className="glass-card">
-                <CardHeader>
-                  <CardTitle>Sales Distribution</CardTitle>
-                </CardHeader>
-                <CardContent className="flex justify-center">
-                  <PieChart className="h-52 w-52 text-primary/80" />
+                  <ReportTable 
+                    data={mockSales} 
+                    type="sales" 
+                    formatCurrency={formatCurrency} 
+                    formatDate={formatDate} 
+                  />
                 </CardContent>
               </Card>
             </div>
-
-            <Card className="mt-6 glass-card">
-              <CardHeader>
-                <CardTitle>Sales Data</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ReportTable 
-                  data={mockSales} 
-                  type="sales" 
-                  formatCurrency={formatCurrency} 
-                  formatDate={formatDate} 
-                />
-              </CardContent>
-            </Card>
           </TabsContent>
 
-          <TabsContent value="products" className="mt-0">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card className="lg:col-span-2 glass-card">
+          <TabsContent value="products" className="mt-4">
+            <div id="products-report-content" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2 glass-card">
+                  <CardHeader>
+                    <CardTitle>Top Products</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ProductsReportChart />
+                  </CardContent>
+                </Card>
+
+                <Card className="glass-card">
+                  <CardHeader>
+                    <CardTitle>Stock Distribution</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex justify-center">
+                    <PieChart className="h-52 w-52 text-primary/80" />
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card className="mt-6 glass-card">
                 <CardHeader>
-                  <CardTitle>Top Products</CardTitle>
+                  <CardTitle>Products Inventory</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ProductsReportChart />
-                </CardContent>
-              </Card>
-
-              <Card className="glass-card">
-                <CardHeader>
-                  <CardTitle>Stock Distribution</CardTitle>
-                </CardHeader>
-                <CardContent className="flex justify-center">
-                  <PieChart className="h-52 w-52 text-primary/80" />
+                  <ReportTable 
+                    data={mockProducts} 
+                    type="products" 
+                    formatCurrency={formatCurrency}
+                  />
                 </CardContent>
               </Card>
             </div>
-
-            <Card className="mt-6 glass-card">
-              <CardHeader>
-                <CardTitle>Products Inventory</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ReportTable 
-                  data={mockProducts} 
-                  type="products" 
-                  formatCurrency={formatCurrency}
-                />
-              </CardContent>
-            </Card>
           </TabsContent>
 
-          <TabsContent value="invoices" className="mt-0">
+          <TabsContent value="invoices" className="mt-4">
             <Card className="glass-card">
               <CardHeader>
                 <CardTitle>Recent Invoices</CardTitle>
