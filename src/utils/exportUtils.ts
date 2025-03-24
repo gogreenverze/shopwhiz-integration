@@ -14,6 +14,12 @@ export const generatePDF = (elementId: string, title: string, mode?: string, dat
   
   console.log(`Generating PDF for ${elementId} with title: ${title}`);
   
+  // Show a notification or loading state to indicate PDF generation is in progress
+  const loadingToast = document.createElement('div');
+  loadingToast.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded shadow-lg z-50';
+  loadingToast.textContent = 'Generating PDF...';
+  document.body.appendChild(loadingToast);
+  
   if (mode === 'invoice' && data) {
     console.log('Invoice data:', data);
     // In a real implementation, this would generate an invoice PDF with the sale data
@@ -21,6 +27,8 @@ export const generatePDF = (elementId: string, title: string, mode?: string, dat
   
   // Simulate PDF download with a delay
   setTimeout(() => {
+    document.body.removeChild(loadingToast);
+    
     const blob = new Blob(['PDF Content Simulation'], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -40,6 +48,12 @@ export const generatePDF = (elementId: string, title: string, mode?: string, dat
  * @param filename Filename for the exported CSV
  */
 export const exportCSV = (data: any[][], headers: string[], filename: string) => {
+  // Show a notification or loading state
+  const loadingToast = document.createElement('div');
+  loadingToast.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded shadow-lg z-50';
+  loadingToast.textContent = 'Exporting CSV...';
+  document.body.appendChild(loadingToast);
+  
   // Create CSV content
   const csvContent = [
     headers.join(','),
@@ -55,13 +69,17 @@ export const exportCSV = (data: any[][], headers: string[], filename: string) =>
   ].join('\n');
   
   // Create blob and download
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${filename}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  setTimeout(() => {
+    document.body.removeChild(loadingToast);
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 300);
 };

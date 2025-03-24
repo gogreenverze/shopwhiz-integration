@@ -3,6 +3,15 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { mockProducts } from "@/data/mockData";
 import { useFormatters } from "@/utils/formatters";
 
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  stock: number;
+  sold?: number; // Make 'sold' property optional
+}
+
 const ProductsReportChart = () => {
   const { formatCurrency } = useFormatters();
   
@@ -10,13 +19,13 @@ const ProductsReportChart = () => {
   const topProducts = [...mockProducts]
     .sort((a, b) => {
       // Calculate sales value based on price (assume 10 sold if none specified)
-      const aSold = 'sold' in a ? (a.sold as number) : 10;
-      const bSold = 'sold' in b ? (b.sold as number) : 10;
+      const aSold = a.sold !== undefined ? a.sold : 10;
+      const bSold = b.sold !== undefined ? b.sold : 10;
       return b.price * bSold - a.price * aSold;
     })
     .slice(0, 10)
     .map(product => {
-      const soldQuantity = 'sold' in product ? (product.sold as number) : 10;
+      const soldQuantity = product.sold !== undefined ? product.sold : 10;
       return {
         name: product.name.length > 20 ? product.name.slice(0, 20) + '...' : product.name,
         value: product.price * soldQuantity
