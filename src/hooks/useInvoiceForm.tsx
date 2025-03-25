@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { mockProducts, mockCustomers } from "@/data/mockData";
 import { z } from "zod";
@@ -40,14 +39,14 @@ export const useInvoiceForm = (onComplete?: () => void) => {
     email: "",
     items: [{ product: "", quantity: 1, price: 0 }],
     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    notes: ""
+    notes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleAddItem = () => {
     setFormData({
       ...formData,
-      items: [...formData.items, { product: "", quantity: 1, price: 0 }]
+      items: [...formData.items, { product: "", quantity: 1, price: 0 }],
     });
   };
 
@@ -59,26 +58,26 @@ export const useInvoiceForm = (onComplete?: () => void) => {
 
   const handleItemChange = (index: number, field: string, value: any) => {
     const items = [...formData.items];
-    
+
     if (field === "product" && value) {
-      const product = mockProducts.find(p => p.id === value);
+      const product = mockProducts.find((p) => p.id === value);
       if (product) {
         items[index] = {
           ...items[index],
           [field]: value,
-          price: product.price
+          price: product.price,
         };
       }
     } else {
       items[index] = { ...items[index], [field]: value };
     }
-    
+
     setFormData({ ...formData, items });
   };
 
   const handleChange = (field: keyof InvoiceFormData, value: any) => {
     setFormData({ ...formData, [field]: value });
-    
+
     // Clear error for this field if it exists
     if (errors[field]) {
       const newErrors = { ...errors };
@@ -88,7 +87,7 @@ export const useInvoiceForm = (onComplete?: () => void) => {
   };
 
   const calculateTotal = () => {
-    return formData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return formData.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const validateForm = (): boolean => {
@@ -100,7 +99,7 @@ export const useInvoiceForm = (onComplete?: () => void) => {
           invoiceItemSchema.parse(item);
         } catch (error) {
           if (error instanceof z.ZodError) {
-            error.errors.forEach(err => {
+            error.errors.forEach((err) => {
               const field = `items[${index}].${err.path[0]}`;
               itemErrors[field] = err.message;
             });
@@ -110,23 +109,26 @@ export const useInvoiceForm = (onComplete?: () => void) => {
 
       // Now validate the whole form
       invoiceSchema.parse(formData);
-      
+
       // If we have item errors, set them even if the schema passes
       if (Object.keys(itemErrors).length > 0) {
+        console.log("Validation failed: ", itemErrors); // Debugging
         setErrors(itemErrors);
         return false;
       }
-      
+
       setErrors({});
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
-        error.errors.forEach(err => {
+        error.errors.forEach((err) => {
           if (err.path.length > 0) {
-            newErrors[err.path.join('.')] = err.message;
+            newErrors[err.path.join(".")] = err.message;
           }
         });
+
+        console.log("Validation failed: ", newErrors); // Debugging
         setErrors(newErrors);
       }
       return false;
@@ -138,25 +140,25 @@ export const useInvoiceForm = (onComplete?: () => void) => {
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields correctly.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
-    
+
     toast({
       title: "Success",
-      description: "Invoice created successfully"
+      description: "Invoice created successfully",
     });
-    
+
     // Reset form
     setFormData({
       customer: "",
       email: "",
       items: [{ product: "", quantity: 1, price: 0 }],
       dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      notes: ""
+      notes: "",
     });
-    
+
     if (onComplete) {
       onComplete();
     }
@@ -170,6 +172,6 @@ export const useInvoiceForm = (onComplete?: () => void) => {
     handleRemoveItem,
     handleItemChange,
     calculateTotal,
-    handleSubmit
+    handleSubmit,
   };
 };
