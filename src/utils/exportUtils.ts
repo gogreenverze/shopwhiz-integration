@@ -2,6 +2,7 @@
 // Utility functions for exporting data to PDF and CSV formats
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { toast } from "sonner";
 
 /**
  * Generate a PDF document for a given element ID
@@ -10,12 +11,9 @@ import html2canvas from 'html2canvas';
  * @param mode Optional mode for special formatting (e.g., 'invoice')
  * @param data Optional data for invoice mode
  */
-export const generatePDF = (elementId: string, title: string, mode?: string, data?: any) => {
-  // Show a notification or loading state to indicate PDF generation is in progress
-  const loadingToast = document.createElement('div');
-  loadingToast.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded shadow-lg z-50';
-  loadingToast.textContent = 'Generating PDF...';
-  document.body.appendChild(loadingToast);
+export const generatePDF = async (elementId: string, title: string, mode?: string, data?: any) => {
+  // Show a loading toast
+  toast.loading('Generating PDF...');
   
   console.log(`Generating PDF for ${elementId} with title: ${title}`);
   
@@ -76,63 +74,66 @@ export const generatePDF = (elementId: string, title: string, mode?: string, dat
       
       // Save the PDF
       pdf.save(`${title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+      toast.dismiss();
+      toast.success('Invoice PDF generated successfully');
     } else {
       // Handle report PDF export
       const element = document.getElementById(elementId);
       if (!element) {
         console.error(`Element with ID ${elementId} not found`);
-        document.body.removeChild(loadingToast);
+        toast.dismiss();
+        toast.error(`Element with ID ${elementId} not found`);
         return;
       }
       
-      // Use html2canvas to convert the element to an image
-      html2canvas(element, {
+      // Use html2canvas with better settings for tables and graphs
+      const canvas = await html2canvas(element, {
         scale: 2,
         logging: false,
         useCORS: true,
-        allowTaint: true
-      }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-        });
-        
-        // Add title
-        pdf.setFontSize(16);
-        pdf.text(title, 10, 10);
-        
-        // Calculate dimensions to fit the image on the page
-        const imgWidth = 190;
-        const pageHeight = 297;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 20; // Start position after title
-        
-        // Add the image to the PDF
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        heightLeft -= (pageHeight - position);
-        
-        // Add new pages if content doesn't fit on one page
-        while (heightLeft > 0) {
-          position = 10;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 10, position - imgHeight + heightLeft, imgWidth, imgHeight);
-          heightLeft -= (pageHeight - position);
-        }
-        
-        // Save the PDF
-        pdf.save(`${title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
-        document.body.removeChild(loadingToast);
-      }).catch(error => {
-        console.error('Error generating PDF:', error);
-        document.body.removeChild(loadingToast);
+        allowTaint: true,
+        backgroundColor: '#ffffff'
       });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      // Add title
+      pdf.setFontSize(16);
+      pdf.text(title, 10, 10);
+      
+      // Calculate dimensions to fit the image on the page
+      const imgWidth = 190;
+      const pageHeight = 297;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 20; // Start position after title
+      
+      // Add the image to the PDF
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= (pageHeight - position);
+      
+      // Add new pages if content doesn't fit on one page
+      while (heightLeft > 0) {
+        position = 10;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position - imgHeight + heightLeft, imgWidth, imgHeight);
+        heightLeft -= (pageHeight - position);
+      }
+      
+      // Save the PDF
+      pdf.save(`${title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+      toast.dismiss();
+      toast.success('Report PDF generated successfully');
     }
   } catch (error) {
     console.error('Error generating PDF:', error);
-    document.body.removeChild(loadingToast);
+    toast.dismiss();
+    toast.error('Error generating PDF');
   }
 };
 
@@ -143,11 +144,7 @@ export const generatePDF = (elementId: string, title: string, mode?: string, dat
  * @param filename Filename for the exported CSV
  */
 export const exportCSV = (data: any[][], headers: string[], filename: string) => {
-  // Show a notification or loading state
-  const loadingToast = document.createElement('div');
-  loadingToast.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded shadow-lg z-50';
-  loadingToast.textContent = 'Exporting CSV...';
-  document.body.appendChild(loadingToast);
+  toast.loading('Exporting CSV...');
   
   // Create CSV content
   const csvContent = [
@@ -165,16 +162,23 @@ export const exportCSV = (data: any[][], headers: string[], filename: string) =>
   
   // Create blob and download
   setTimeout(() => {
-    document.body.removeChild(loadingToast);
-    
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${filename}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${filename}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.dismiss();
+      toast.success('CSV exported successfully');
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      toast.dismiss();
+      toast.error('Error exporting CSV');
+    }
   }, 300);
 };
+

@@ -5,16 +5,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { mockSales, mockCustomers, mockProducts } from "@/data/mockData";
-import { formatCurrency, formatDate } from "@/utils/formatters";
+import { useFormatters } from "@/utils/formatters";
 import DataTable from "@/components/ui/DataTable";
 import { FileText, Download, Mail, Printer, Search, Filter, Plus, Check, X } from "lucide-react";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 const Invoices = () => {
+  const { formatCurrency, formatDate } = useFormatters();
+  
   // Transform sales into invoices
   const invoices = mockSales.map((sale) => ({
     id: `INV-${sale.id.substring(0, 6)}`,
@@ -402,3 +404,4 @@ const Invoices = () => {
 };
 
 export default Invoices;
+
