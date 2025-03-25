@@ -10,6 +10,7 @@ import InvoiceSearch from "@/components/invoices/InvoiceSearch";
 const Invoices = () => {
   const { formatCurrency, formatDate } = useFormatters();
   const [isInvoiceDialogOpen, setIsInvoiceDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Transform sales into invoices
   const invoices = mockSales.map((sale) => ({
@@ -22,6 +23,16 @@ const Invoices = () => {
     status: Math.random() > 0.3 ? "paid" : Math.random() > 0.5 ? "pending" : "overdue",
     items: sale.items,
   }));
+
+  // Filter invoices based on search query
+  const filteredInvoices = invoices.filter(invoice => {
+    if (!searchQuery) return true;
+    return (
+      invoice.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.customerEmail.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   // Calculate summary data
   const paidInvoices = invoices.filter((i) => i.status === "paid");
@@ -67,10 +78,14 @@ const Invoices = () => {
         />
       </div>
 
-      <InvoiceSearch onCreateInvoice={() => setIsInvoiceDialogOpen(true)} />
+      <InvoiceSearch 
+        onCreateInvoice={() => setIsInvoiceDialogOpen(true)}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       <InvoiceTable 
-        invoices={invoices} 
+        invoices={filteredInvoices} 
         formatCurrency={formatCurrency} 
         formatDate={formatDate} 
       />
