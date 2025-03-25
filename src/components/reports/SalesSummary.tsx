@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SalesReportChart from './SalesReportChart';
@@ -11,6 +11,8 @@ interface SalesSummaryProps {
 }
 
 const SalesSummary: React.FC<SalesSummaryProps> = ({ formatCurrency, formatDate }) => {
+  const [selectedView, setSelectedView] = useState("today");
+  
   // Calculate total sales
   const totalAmount = mockSales.reduce((sum, sale) => sum + sale.grandTotal, 0);
   const totalCount = mockSales.length;
@@ -50,12 +52,12 @@ const SalesSummary: React.FC<SalesSummaryProps> = ({ formatCurrency, formatDate 
   const monthCount = monthSales.length;
   
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-2" id="sales-report-content">
       <CardHeader>
         <CardTitle>Sales Summary</CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="today" className="space-y-4">
+        <Tabs value={selectedView} onValueChange={setSelectedView} className="space-y-4">
           <TabsList>
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="week">This Week</TabsTrigger>
@@ -79,7 +81,12 @@ const SalesSummary: React.FC<SalesSummaryProps> = ({ formatCurrency, formatDate 
               </div>
             </div>
             
-            <SalesReportChart data={todaySales} formatCurrency={formatCurrency} formatDate={formatDate} />
+            <SalesReportChart 
+              data={todaySales} 
+              formatCurrency={formatCurrency} 
+              formatDate={formatDate} 
+              reportType="daily"
+            />
           </TabsContent>
           
           <TabsContent value="week" className="space-y-4">
@@ -98,7 +105,12 @@ const SalesSummary: React.FC<SalesSummaryProps> = ({ formatCurrency, formatDate 
               </div>
             </div>
             
-            <SalesReportChart data={weekSales} formatCurrency={formatCurrency} formatDate={formatDate} />
+            <SalesReportChart 
+              data={weekSales} 
+              formatCurrency={formatCurrency} 
+              formatDate={formatDate}
+              reportType="weekly"
+            />
           </TabsContent>
           
           <TabsContent value="month" className="space-y-4">
@@ -117,7 +129,12 @@ const SalesSummary: React.FC<SalesSummaryProps> = ({ formatCurrency, formatDate 
               </div>
             </div>
             
-            <SalesReportChart data={monthSales} formatCurrency={formatCurrency} formatDate={formatDate} />
+            <SalesReportChart 
+              data={monthSales} 
+              formatCurrency={formatCurrency} 
+              formatDate={formatDate}
+              reportType="monthly"
+            />
           </TabsContent>
           
           <TabsContent value="all" className="space-y-4">
@@ -136,7 +153,12 @@ const SalesSummary: React.FC<SalesSummaryProps> = ({ formatCurrency, formatDate 
               </div>
             </div>
             
-            <SalesReportChart data={mockSales} formatCurrency={formatCurrency} formatDate={formatDate} />
+            <SalesReportChart 
+              data={mockSales} 
+              formatCurrency={formatCurrency} 
+              formatDate={formatDate}
+              reportType="yearly"
+            />
           </TabsContent>
         </Tabs>
       </CardContent>

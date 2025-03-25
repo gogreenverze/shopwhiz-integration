@@ -97,7 +97,6 @@ const Reports = () => {
 
           <TabsContent value="sales" className="mt-4">
             <SalesSummary 
-              reportType={reportType} 
               formatCurrency={formatCurrency} 
               formatDate={formatDate} 
             />
@@ -128,4 +127,3 @@ const Reports = () => {
 };
 
 export default Reports;
-

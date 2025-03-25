@@ -1,3 +1,4 @@
+
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useFormatters } from "@/utils/formatters";
 import { mockSales } from "@/data/mockData";
@@ -8,14 +9,25 @@ interface SalesData {
 }
 
 interface SalesReportChartProps {
-  reportType: "daily" | "weekly" | "monthly" | "yearly";
+  reportType?: "daily" | "weekly" | "monthly" | "yearly";
+  data?: any[];
+  formatCurrency?: (value: number) => string;
+  formatDate?: (date: string | Date) => string;
 }
 
-const SalesReportChart = ({ reportType }: SalesReportChartProps) => {
-  const { formatCurrency } = useFormatters();
+const SalesReportChart = ({ 
+  reportType, 
+  data = mockSales,
+  formatCurrency: propFormatCurrency,
+  formatDate 
+}: SalesReportChartProps) => {
+  const formatters = useFormatters();
+  const formatCurrency = propFormatCurrency || formatters.formatCurrency;
 
-  const data: SalesData[] = mockSales.map((sale) => ({
-    date: sale.createdAt.toLocaleDateString(),
+  const chartData: SalesData[] = data.map((sale) => ({
+    date: typeof sale.createdAt === 'string' 
+      ? sale.createdAt 
+      : sale.createdAt.toLocaleDateString(),
     value: sale.grandTotal,
   }));
 
@@ -23,7 +35,7 @@ const SalesReportChart = ({ reportType }: SalesReportChartProps) => {
     <div className="h-[350px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
-          data={data}
+          data={chartData}
           margin={{
             top: 10,
             right: 30,
