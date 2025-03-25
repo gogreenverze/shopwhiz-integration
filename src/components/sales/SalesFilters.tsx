@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +13,8 @@ interface SalesFiltersProps {
 }
 
 const SalesFilters: React.FC<SalesFiltersProps> = ({ dateRange, setDateRange }) => {
+  const correctedDateRange = dateRange.from ? dateRange : undefined;
+
   return (
     <Card>
       <CardContent className="p-4">
@@ -34,8 +35,7 @@ const SalesFilters: React.FC<SalesFiltersProps> = ({ dateRange, setDateRange }) 
                     {dateRange.from ? (
                       dateRange.to ? (
                         <>
-                          {format(dateRange.from, "LLL dd, y")} -{" "}
-                          {format(dateRange.to, "LLL dd, y")}
+                          {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
                         </>
                       ) : (
                         format(dateRange.from, "LLL dd, y")
@@ -49,8 +49,8 @@ const SalesFilters: React.FC<SalesFiltersProps> = ({ dateRange, setDateRange }) 
                   <Calendar
                     initialFocus
                     mode="range"
-                    defaultMonth={dateRange.from}
-                    selected={dateRange}
+                    defaultMonth={dateRange.from ?? new Date()}
+                    selected={correctedDateRange}
                     onSelect={setDateRange}
                     numberOfMonths={2}
                   />
