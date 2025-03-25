@@ -1,16 +1,21 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const customerController = require('../controllers/customerController');
 
 // Get all customers
-router.get('/', (req, res) => {
-  db.all('SELECT * FROM customers', (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(rows);
-  });
-});
+router.get('/', customerController.getAllCustomers);
+
+// Get a single customer
+router.get('/:id', customerController.getCustomerById);
+
+// Create a customer
+router.post('/', customerController.createCustomer);
+
+// Update a customer
+router.put('/:id', customerController.updateCustomer);
+
+// Delete a customer
+router.delete('/:id', customerController.deleteCustomer);
 
 module.exports = router;

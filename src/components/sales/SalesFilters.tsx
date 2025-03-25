@@ -4,14 +4,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { DateRange } from "react-day-picker";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
 interface SalesFiltersProps {
-  dateRange: DateRange;
-  setDateRange: (range: DateRange) => void;
+  dateRange: { from?: Date; to?: Date };
+  setDateRange: (range: { from?: Date; to?: Date }) => void;
 }
 
 const SalesFilters: React.FC<SalesFiltersProps> = ({ dateRange, setDateRange }) => {
@@ -28,11 +27,11 @@ const SalesFilters: React.FC<SalesFiltersProps> = ({ dateRange, setDateRange }) 
                     variant="outline"
                     className={cn(
                       "justify-start text-left font-normal w-[240px]",
-                      !dateRange && "text-muted-foreground"
+                      !dateRange.from && "text-muted-foreground"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateRange?.from ? (
+                    {dateRange.from ? (
                       dateRange.to ? (
                         <>
                           {format(dateRange.from, "LLL dd, y")} -{" "}
@@ -50,7 +49,7 @@ const SalesFilters: React.FC<SalesFiltersProps> = ({ dateRange, setDateRange }) 
                   <Calendar
                     initialFocus
                     mode="range"
-                    defaultMonth={dateRange?.from}
+                    defaultMonth={dateRange.from}
                     selected={dateRange}
                     onSelect={setDateRange}
                     numberOfMonths={2}
@@ -62,7 +61,7 @@ const SalesFilters: React.FC<SalesFiltersProps> = ({ dateRange, setDateRange }) 
 
           <Button 
             variant="ghost" 
-            onClick={() => setDateRange({})}
+            onClick={() => setDateRange({ from: undefined, to: undefined })}
             className="h-9 mt-auto"
             disabled={!dateRange.from && !dateRange.to}
           >

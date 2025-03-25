@@ -2,12 +2,11 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { mockSales } from "@/data/mockData";
-import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 
 interface SalesTableProps {
   searchQuery: string;
-  dateRange: DateRange;
+  dateRange: { from?: Date; to?: Date };
   formatCurrency: (value: number) => string;
   formatDate: (date: string | Date) => string;
 }
