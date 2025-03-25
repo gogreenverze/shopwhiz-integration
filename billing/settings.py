@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-_fso#6=#1ois*d)1@+x7njc1ozc_ld2f!_%9#b0@n&*ocw6t&+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["smartbilling-nexm.onrender.com", "127.0.0.1"]
+
 
 
 # Application definition
