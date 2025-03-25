@@ -8,10 +8,12 @@ import { mockProducts } from "@/data/mockData";
 
 interface ProductsSummaryProps {
   formatCurrency: (value: number) => string;
+  formatDate?: (date: string | Date) => string; // Added formatDate prop with optional flag
 }
 
 const ProductsSummary: React.FC<ProductsSummaryProps> = ({
-  formatCurrency
+  formatCurrency,
+  formatDate
 }) => {
   return (
     <div id="products-report-content" className="space-y-6">
@@ -44,6 +46,7 @@ const ProductsSummary: React.FC<ProductsSummaryProps> = ({
             data={mockProducts} 
             type="products" 
             formatCurrency={formatCurrency}
+            formatDate={formatDate}
           />
         </CardContent>
       </Card>
@@ -52,4 +55,3 @@ const ProductsSummary: React.FC<ProductsSummaryProps> = ({
 };
 
 export default ProductsSummary;
-

@@ -9,7 +9,7 @@ import { mockSales } from "@/data/mockData";
 interface SalesSummaryProps {
   reportType: "daily" | "weekly" | "monthly" | "yearly";
   formatCurrency: (value: number) => string;
-  formatDate: (date: Date) => string;
+  formatDate: (date: string | Date) => string; // Updated to accept string | Date
 }
 
 const SalesSummary: React.FC<SalesSummaryProps> = ({
@@ -57,4 +57,3 @@ const SalesSummary: React.FC<SalesSummaryProps> = ({
 };
 
 export default SalesSummary;
-
