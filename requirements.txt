@@ -1,2 +1,2 @@
-django==5.1.6
+django==5.1.14
 gunicorn
